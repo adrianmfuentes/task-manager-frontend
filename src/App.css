@@ -1,0 +1,157 @@
+/* Global styles */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f2f2f2; /* Light grey background */
+}
+
+/* Main container for content */
+.main-container {
+  max-width: 800px;
+  margin: 20px auto; /* Center content horizontally */
+  padding: 20px;
+  background-color: #fff; /* White background for content */
+  border-radius: 5px; /* Rounded corners */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+}
+
+/* Headers */
+h1, h2, h3 {
+  text-align: center; /* Center-align all header text */
+}
+
+/* Navigation Bar */
+.navbar {
+  list-style-type: none; /* Remove default list styling */
+  margin: 0;
+  padding: 0;
+  overflow: hidden; /* Ensure content stays inside the navbar */
+  background-color: #000000; /* Black background */
+}
+
+.navbar li {
+  float: left; /* Horizontally align navbar items */
+}
+
+.navbar li a {
+  display: block; /* Make the link cover the entire li */
+  color: #fff; /* White text */
+  text-align: center; /* Center text within the link */
+  padding: 14px 16px; /* Spacing for clickable area */
+  text-decoration: none; /* Remove underline */
+}
+
+.navbar li a:hover {
+  background-color: #3500f7; /* Change background on hover */
+}
+
+/* Centered box for forms or important sections */
+.center-box {
+  max-width: 400px;
+  margin: 20px auto; /* Center-align box */
+  padding: 20px;
+  background-color: #f9f9f9; /* Light grey background */
+  border: 1px solid #ccc; /* Light grey border */
+}
+
+/* Form groups */
+.form-group {
+  margin-bottom: 15px;
+  display: flex; /* Ensure flexible layout for form elements */
+}
+
+/* Input fields */
+input {
+  padding: 10px;
+  border: 1px solid #ccc; /* Light grey border */
+  width: 100%; /* Full-width input fields */
+}
+
+/* Button styles */
+button {
+  padding: 10px 20px;
+  background-color: #4CAF50; /* Green background */
+  color: #fff; /* White text */
+  border: none;
+  border-radius: 3px; /* Slight rounding for button edges */
+  cursor: pointer; /* Pointer cursor on hover */
+  width: 100%; /* Full-width button */
+}
+
+button:hover {
+  background-color: #45a049; /* Darker green on hover */
+}
+
+/* Error messages */
+.errorMessage {
+  text-align: center; /* Center-align error messages */
+  color: red; /* Red text for errors */
+}
+
+.errorForm {
+  color: red; /* Red text for form validation errors */
+}
+
+/* Notification box */
+.notification {
+  position: relative; /* For positioning close button */
+  background-color: white;
+  border: 1px solid gray;
+  color: gray; /* Grey text */
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 4px; /* Slight rounding for notification */
+}
+
+.close-btn {
+  position: absolute; /* Position close button within the notification */
+  top: 5px;
+  right: 5px;
+  font-size: 14px;
+  color: #999; /* Grey color for the close button */
+  cursor: pointer; /* Pointer cursor on hover */
+}
+
+/* List of tasks */
+.task-list {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center-align the item list content */
+}
+
+.task-list h2 {
+  text-align: center;
+  width: 100%; /* Make headers span full width of item list */
+}
+
+/* Item container */
+.task-container {
+  display: flex;
+  flex-wrap: wrap; /* Wrap items on smaller screens */
+  justify-content: center; /* Center-align items */
+  width: 100%;
+}
+
+/* Individual task box */
+.task {
+  width: 300px; /* Fixed width for items */
+  margin: 10px;
+  padding: 10px;
+  background-color: #fff; /* White background */
+  border: 1px solid #ccc; /* Light grey border */
+  border-radius: 5px; /* Slight rounding for edges */
+}
+
+/* Item content styling */
+.task .title {
+  text-align: center;
+  font-weight: bold; /* Bold text for titles */
+}
+
+.task .description,
+.item .date {
+  font-weight: normal; /* Normal weight for other text */
+  margin-left: 10px;
+  text-align: left; /* Left-align for content */
+}
