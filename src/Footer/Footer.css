@@ -1,0 +1,39 @@
+/* Custom footer styles */
+.custom-footer {
+    background-color: #001529; /* Dark background for footer */
+    color: #ffffff; /* White text color */
+    padding: 20px; /* Inner spacing */
+    text-align: center; /* Center-align text */
+}
+
+/* Footer content container */
+.footer-content {
+    display: flex; /* Use flexbox for layout */
+    flex-direction: column; /* Stack items vertically */
+    align-items: center; /* Center items horizontally */
+}
+
+/* Footer text styling */
+.footer-text {
+    margin-bottom: 10px; /* Spacing below the text */
+    font-size: 16px; /* Font size for better readability */
+}
+
+/* Navigation links in the footer */
+.footer-nav {
+    display: flex; /* Use flexbox for navigation links */
+    justify-content: center; /* Center-align navigation items */
+    gap: 15px; /* Spacing between links */
+}
+
+/* Individual footer link styling */
+.footer-link {
+    color: #ffffff; /* White text for links */
+    text-decoration: none; /* Remove underline */
+    transition: color 0.3s; /* Smooth transition for hover effect */
+}
+
+/* Hover effect for links */
+.footer-link:hover {
+    color: #3500f7; /* Change color on hover */
+}

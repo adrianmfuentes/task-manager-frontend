@@ -5,98 +5,112 @@ import { useNavigate } from "react-router-dom";
 import { emailPattern } from "../Utils";
 import { Button, Card, Col, Input, Row } from "antd";
 
-const LoginUserComp = ({ setLogin }) => {
+const LoginUserComp = ({ setLogin, createNotification }) => {
     // State declarations
-    const [email, setEmail] = useState(null); // State to hold email input
-    const [, setMessage] = useState(null); // State to display error messages
-    const [password, setPassword] = useState(""); // State to hold password input
+    const [email, setEmail] = useState(""); // Email input state
+    const [password, setPassword] = useState(""); // Password input state
+    const [, setMessage] = useState(""); // State to display error messages
     const [, setError] = useState({}); // State to track validation errors
 
     const navigate = useNavigate(); // Hook for navigation in the app
 
-    // Effect hook to check for input errors when email or password changes
+    // Effect hook to check for input errors and handle keydown events
     useEffect(() => {
-        checkInputErrors(); // Call validation function when email or password changes
+        checkInputErrors(); // Validate inputs on change
+
+        // Function to handle Enter key for login
+        const handleKeyDown = (event) => {
+            if (event.key === "Enter") {
+                handleLoginClick(); // Trigger login on Enter
+            }
+        };
+
+        // Attach event listener for keydown
+        window.addEventListener("keydown", handleKeyDown);
+
+        // Clean up the event listener on component unmount
+        return () => {
+            window.removeEventListener("keydown", handleKeyDown);
+        };
     }, [email, password]);
 
-    // Function to validate input fields
+    // Validate input fields
     const checkInputErrors = () => {
         let updatedErrors = {};
 
-        // Validate email field
+        // Validate email format
         if (!email || email.length < 3 || !emailPattern.test(email)) {
             updatedErrors.email = "Incorrect email format";
         }
 
-        // Validate password field
+        // Validate password length
         if (!password || password.length < 5) {
-            updatedErrors.password = "Incorrect password, maybe too short";
+            updatedErrors.password = "Password must be at least 5 characters";
         }
 
-        setError(updatedErrors); // Update the error state with the results of validation
+        setError(updatedErrors); // Update error state
     };
 
-    // Handler to update email state
+    // Handlers for input changes
     const handleEmailChange = (e) => {
-        setEmail(e.currentTarget.value);
+        setEmail(e.target.value);
     };
 
-    // Handler to update password state
     const handlePasswordChange = (e) => {
-        setPassword(e.currentTarget.value);
+        setPassword(e.target.value);
     };
 
-    // Handler for the login button click event
+    // Handler for login button click event
     const handleLoginClick = async () => {
-        // Make an API request to log in the user
         const res = await fetch(`${backendUrl}/users/login`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email, password })
+            body: JSON.stringify({ email, password }),
         });
 
-        // If the response is OK, handle success logic
+        // Handle API response
         if (res.ok) {
             const jsonData = await res.json();
-
-            // Store user credentials in localStorage if login is successful
             if (jsonData.apiKey) {
+                // Store user credentials in localStorage
                 localStorage.setItem("apiKey", jsonData.apiKey);
                 localStorage.setItem("userId", jsonData.id);
                 localStorage.setItem("email", jsonData.email);
             }
 
             setLogin(true); // Update login state
-            navigate("/myItems"); // Redirect to a different page
+            navigate("/myTasks"); // Redirect to tasks page
         } else {
-            // If the login fails, update the message state with the error
+            // Handle login failure
             const jsonData = await res.json();
             setMessage(jsonData.error);
+            createNotification(jsonData.error);
         }
     };
 
     return (
-        <Row align='middle' justify='center' style={{ minHeight: "70vh" }}>
+        <Row align="middle" justify="center" style={{ minHeight: "70vh" }}>
             <Col>
-                <Card title='Login' style={{ minWidth: '300px', maxWidth: '500px' }}>
-                    <Input 
-                        style={{ marginBottom: "10px" }} 
-                        size="large" 
-                        type="text" 
-                        placeholder="email" 
+                <Card title="Login" style={{ minWidth: "300px", maxWidth: "500px" }}>
+                    <Input
+                        style={{ marginBottom: "10px" }}
+                        size="large"
+                        type="text"
+                        placeholder="Email"
                         onChange={handleEmailChange} // Update email state on input change
                     />
-                    <Input 
-                        style={{ marginBottom: "10px" }} 
-                        size="large" 
+                    <Input
+                        style={{ marginBottom: "10px" }}
+                        size="large"
                         type="password" // Set input type to password for security
-                        placeholder="password" 
+                        placeholder="Password"
                         onChange={handlePasswordChange} // Update password state on input change
                     />
-                    <Button 
-                        type="primary" 
+                    <Button
+                        type="primary"
                         onClick={handleLoginClick} // Trigger login handler on button click
                         block
+                        disabled={!email || !password} // Disable button if fields are empty
                     >
                         Login
                     </Button>
@@ -106,4 +120,4 @@ const LoginUserComp = ({ setLogin }) => {
     );
 };
 
-export default LoginUserComp;
+export default React.memo(LoginUserComp);

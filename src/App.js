@@ -1,102 +1,116 @@
 import 'antd/dist/reset.css'; // Import Ant Design's CSS reset
 import { Link, Route, Routes, useNavigate } from 'react-router-dom'; // Import React Router functions
-import React, { useEffect, useState } from 'react'; // Import React hooks
+import React, { useEffect, useState, Suspense } from 'react'; // Import React hooks
 import { backendUrl } from './Globals'; // Import backend URL from global configuration
 import { Layout, Menu, notification } from 'antd'; // Import Ant Design components
-import { Content, Footer, Header } from 'antd/es/layout/layout'; // Destructure Layout components
+import { Content, Header } from 'antd/es/layout/layout'; // Destructure Layout components
 
 // Import custom components
 import CreateUserComp from './Components/CreateUserComp';
 import LoginUserComp from './Components/LoginUserComp';
-import CreateTaskComp from './Components/CreateTaskComp';
 import ViewTasksComp from './Components/ViewTasksComp';
-import EditTaskComp from './Components/EditTaskComp';
 import CreateProjectComp from './Components/CreateProjectComp';
 import ViewProjectComp from './Components/ViewProjectsComp';
 import EditProjectComp from './Components/EditProjectComp';
+import EditTaskComp from './Components/EditTaskComp';
+import CustomFooter from './Footer/CustomFooter';
+
+// Import additional components
+import PrivacyPolicy from './Footer/PrivacyPolicy';
+import TermsOfService from './Footer/TermsOfService';
+import Contact from './Footer/Contact';
+
+// Lazy load CreateTaskComp for better performance
+const CreateTaskComp = React.lazy(() => import('./Components/CreateTaskComp'));
 
 function App() {
-  // Ant Design notification hook
-  // `api` is the notification object, `contextHolder` is the UI component for notifications
   const [api, contextHolder] = notification.useNotification(); 
-
-  // State to track login status
   const [login, setLogin] = useState(false);
+  const navigate = useNavigate(); 
 
-  const navigate = useNavigate(); // Hook to navigate programmatically within the app
-
-  // Check for existing API key in localStorage on initial render
   useEffect(() => {
-    if (localStorage.getItem("apiKey") !== null) {
-      setLogin(true); // If an API key is found, set login state to true
-    }
-  }, []); // Empty dependency array ensures this runs only on initial mount
+    // Check local storage for apiKey to determine login state
+    const apiKey = localStorage.getItem("apiKey");
+    if (apiKey) setLogin(true); 
 
-  // Function to create and display notifications
+    // Handle user disconnection on page unload
+    const handleBeforeUnload = async (event) => {
+      if (apiKey) {
+        await fetch(`${backendUrl}/user/disconnect?apiKey=${apiKey}`); 
+        localStorage.removeItem("apiKey"); 
+        setLogin(false); 
+      }
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    // Clean up the event listener on component unmount
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, []); 
+
+  // Notification function for user feedback
   const createNotif = (type = "info", msg, placement = "top") => {
-    // Create notification of specified type and placement
     api[type]({ message: msg, description: msg, placement }); 
   };
 
-  // Function to handle user logout
+  // Disconnect function for logging out users
   const disconnect = async () => {
-    // Make API call to disconnect user
-    await fetch(`${backendUrl}/user/disconnect?apiKey=${localStorage.getItem("apiKey")}`); 
-    // Remove API key from localStorage
-    localStorage.removeItem("apiKey"); 
-    // Set login state to false
-    setLogin(false); 
-    // Navigate user back to login page
-    navigate("/login"); 
+    const apiKey = localStorage.getItem("apiKey");
+    if (apiKey) {
+      await fetch(`${backendUrl}/user/disconnect?apiKey=${apiKey}`); 
+      localStorage.removeItem("apiKey"); 
+      setLogin(false); 
+      navigate("/login"); 
+    }
   };
 
   return (
     <>
-      {contextHolder} {/* This is required to show notifications */}
+      {contextHolder} {/* Required to show notifications */}
 
       <Layout className='layout' style={{ minHeight: '100vh' }}>
         <Header>
-          {/* Show menu items based on login status */}
-          {!login && (
-            <Menu mode='horizontal' theme='dark' items={[
-              { key: "menuRegister", label: <Link to="/register">Register</Link> },
-              { key: "menuLogin", label: <Link to="/login">Log In</Link> }
-            ]}>
-            </Menu>
-          )}
-
-          {login && (
-            <Menu mode='horizontal' theme='dark' items={[
-              { key: "menuItems", label: <Link to="/items">Create Task</Link> },
-              { key: "menuMyItems", label: <Link to="/myItems">My Tasks</Link> },
-              { key: "menuCreateItem", label: <Link to="/createItem">My Projects</Link> },
-              { key: "menuDisconnect", label: <Link to="#" onClick={disconnect}>Exit</Link> }
-            ]}>
-            </Menu>
-          )}
+          <Menu mode='horizontal' theme='dark' items={login ? [
+            { key: "menuTasks", label: <Link to="/createTask">Create Task</Link> },
+            { key: "menuMyTasks", label: <Link to="/myTasks">My Tasks</Link> },
+            { key: "menuProjects", label: <Link to="/createProject">Create Project</Link> },
+            { key: "menuMyProjects", label: <Link to="/myProjects">My Projects</Link> },
+            { key: "menuDisconnect", label: <Link to="#" onClick={disconnect}>Exit</Link> }
+          ] : [
+            { key: "menuRegister", label: <Link to="/register">Register</Link> },
+            { key: "menuLogin", label: <Link to="/login">Log In</Link> }
+          ]} />
         </Header>
 
         {/* Main content area */}
         <Content style={{ padding: "20px 50px" }}>
-          <Routes>
-            {/* Define routes for different pages */}
-            <Route path="/" element={<p> Website Index (under construction) </p>} />
-            <Route path="/register" element={<CreateUserComp createNotification={createNotif} />} />
-            <Route path="/login" element={<LoginUserComp setLogin={setLogin} />} />
-            <Route path="/task" element={<ViewTasksComp />} />
-            <Route path="/project" element={<ViewProjectComp />} />
-            <Route path="/createTask" element={<CreateTaskComp createNotification={createNotif} />} />
-            <Route path="/createProject" element={<CreateProjectComp createNotification={createNotif} />} />
-            <Route path="/task/edit/:projectid" element={<EditProjectComp createNotification={createNotif} />} />
-            <Route path="/project/edit/:itemId" element={<EditTaskComp createNotification={createNotif} />} />
-          </Routes>
+          <Suspense fallback={<div>Loading...</div>}>
+            <Routes>
+              <Route path="/" element={<p>Website Index (under construction)</p>} />
+              <Route path="/register" element={<CreateUserComp createNotification={createNotif} />} />
+              <Route path="/login" element={<LoginUserComp setLogin={setLogin} createNotification={createNotif} />} />
+              <Route path="/myTasks" element={<ViewTasksComp createNotification={createNotif} />} />
+              <Route path="/myProjects" element={<ViewProjectComp createNotification={createNotif} />} />
+              <Route path="/createTask" element={<CreateTaskComp createNotification={createNotif} />} />
+              <Route path="/createProject" element={<CreateProjectComp createNotification={createNotif} />} />
+              <Route path="/task/edit/:taskId" element={<EditTaskComp createNotification={createNotif} />} />
+              <Route path="/project/edit/:projectId" element={<EditProjectComp createNotification={createNotif} />} />
+            
+               {/* Otras rutas */}
+              <Route path="/privacy" element={<PrivacyPolicy />} />
+              <Route path="/terms" element={<TermsOfService />} />
+              <Route path="/contact" element={<Contact />} />
+            </Routes>
+          </Suspense>
         </Content>
 
         {/* Footer */}
-        <Footer style={{ textAlign: 'center' }}>To Do List Website</Footer>
+        <CustomFooter />  
       </Layout>
     </>
   );
 }
 
-export default App;
+export default React.memo(App);

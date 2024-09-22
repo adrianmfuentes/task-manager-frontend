@@ -1,102 +1,116 @@
-import { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { backendUrl } from "../Globals";
 import { useNavigate } from "react-router-dom";
 import { emailPattern } from "../Utils";
-import { Button, Card, Col, Input, Row, Typography, Alert} from "antd";
+import { Button, Card, Col, Input, Row, Typography, Alert } from "antd";
 
-let CreateUserComp = (props) => {
-    let {createNotification} = props
+const CreateUserComp = (props) => {
+  const { createNotification } = props;
 
-    let [email, setEmail] = useState(null)
-    let [message, setMessage] = useState("")
-    let [password, setPassword] = useState(null)
-    let [error, setError] = useState({})
+  // State variables for email, password, messages, and errors
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [message, setMessage] = useState("");
+  const [error, setError] = useState({});
 
-    let navigate = useNavigate()
+  const navigate = useNavigate();
 
-    useEffect(() => {
-        checkInputErrors()
-    }, [email, password])
-
-    let checkInputErrors = () => {
-        let updatedErrors = {}
-
-        if(email == "" || email?.length < 3 || (email != null && !emailPattern.test(email))){
-            updatedErrors.email = "Incorrect email format"
-        }
-
-        if(password != null){
-            if(password == "" || password?.length < 5){
-                updatedErrors.password = "Incorrect password, maybe too short"
-            }
-        }     
-
-        setError(updatedErrors)
+  // Validate inputs and set errors
+  const validateInputs = (email, password) => {
+    const errors = {};
+    if (email !== "" && (!email|| email.length < 3 || !emailPattern.test(email))) {
+      errors.email = "Incorrect email format";
     }
-
-    let changeEmail = (e) => {
-        let email = e.currentTarget.value
-        setEmail(email)
+    if (password !== "" && (!password || password.length < 5)) {
+      errors.password = "Password is too short, minimum 5 characters";
     }
+    setError(errors);
+    return Object.keys(errors).length === 0; // Return true if valid
+  };
 
-    let changePassword = (e) => {
-        let password = e.currentTarget.value
-        setPassword(password)
+  // Handle input changes
+  const changeEmail = (e) => setEmail(e.currentTarget.value);
+  const changePassword = (e) => setPassword(e.currentTarget.value);
+
+  // Validate inputs on email or password change
+  useEffect(() => {
+    validateInputs(email, password);
+  }, [email, password]);
+
+  // Handle user creation on button click
+  const clickCreate = async () => {
+    if (!validateInputs(email, password)) return; // Check for errors before submission
+
+    try {
+      const res = await fetch(`${backendUrl}/users`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (res.ok) {
+        createNotification("success", "User created");
+        navigate("/login");
+      } else {
+        const jsonData = await res.json();
+        const errorMessages = Array.isArray(jsonData.errors)
+          ? jsonData.errors.map((element) => element.error).join(" ")
+          : jsonData.errors;
+        setMessage(errorMessages);
+      }
+    } catch (error) {
+      setMessage("An error occurred. Please try again.");
     }
+  };
 
-    let clickCreate = async (e) => {
-        let res = await fetch(backendUrl + "/users", {
-            method: "POST",
-            headers: {"Content-Type" : "application/json"},
-            body: JSON.stringify({
-                email : email,
-                password : password
-            })
-        })
+  const { Text } = Typography;
 
-        if (res.ok)
-        {
-            createNotification("success", "User created")
-            navigate("/login")
-        }
-        else
-        {
-            let jsonData = await res.json()
-            let finalErrorMsg = ""
+  return (
+    <Row align="middle" justify="center" style={{ minHeight: "70vh", padding: "10px" }}>
+      {message && <Alert type="error" message={message} style={{ marginBottom: "10px" }} />}
 
-            if(Array.isArray(jsonData.errors))
-            {
-                jsonData.errors.forEach(element => { finalErrorMsg += element.error + " " });
-                setMessage(finalErrorMsg)
-            }
-            else 
-            {
-                setMessage(jsonData.errors)
-            }
-        }
-    }
+      <Col>
+        <Card title="Register" style={{ minWidth: "300px", maxWidth: "500px" }}>
 
-    let {Text} = Typography
+        { /* Email of the user */ }
+          <Input
+            size="large"
+            type="text"
+            placeholder="Email"
+            value={email}
+            onChange={changeEmail}
+            aria-label="Email address"
+            required
+          />
+          {error.email && <Text type="danger">{error.email}</Text>}
 
-    return (
-        <Row align='middle'justify='center' style={{minHeight: "70vh"}}>
-            {message != "" && <Alert type="error" message={ message }/>}
-            
-            <Col>
-                <Card title='Register' style={{minWidth: '300px', maxWidth: '500px'}}>
-                    <Input size="large" type="text" placeholder="name" onChange={changeEmail}/>
-                    {error.name && <Text type="danger">{error.name}</Text>}
+          { /* Password of the user */ }
+          <Input
+            style={{ marginTop: "10px" }}
+            size="large"
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={changePassword}
+            aria-label="Password"
+            required
+          />
+          {error.password && <Text type="danger">{error.password}</Text>}
 
-                    <Input style={{marginTop: "10px"}} size="large" 
-                        type="text" placeholder="password" onChange={changePassword}/>
-                    {error.password && <Text type="danger">{error.password}</Text>}
-                    
-                    <Button style={{marginTop: "10px"}} type="primary" 
-                        onClick={clickCreate} block>Register</Button>
-                </Card>
-            </Col>
-        </Row>       
-    )
-}
+          { /* Button to create a user */ }
+          <Button
+            style={{ marginTop: "10px" }}
+            type="primary"
+            onClick={clickCreate}
+            block
+            disabled={Object.keys(error).length > 0} // Disable if there are validation errors
+          >
+            Register
+          </Button>
+        </Card>
+      </Col>
+    </Row>
+  );
+};
 
 export default CreateUserComp;
