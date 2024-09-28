@@ -3,8 +3,10 @@ import { backendUrl } from "../Globals";
 import { useNavigate } from "react-router-dom";
 import { emailPattern } from "../Utils";
 import { Button, Card, Col, Input, Row, Typography, Alert } from "antd";
+import { useTranslation } from "react-i18next";
 
 const CreateUserComp = (props) => {
+  const { t } = useTranslation();
   const { createNotification } = props;
 
   // State variables for email, password, messages, and errors
@@ -18,11 +20,11 @@ const CreateUserComp = (props) => {
   // Validate inputs and set errors
   const validateInputs = (email, password) => {
     const errors = {};
-    if (email !== "" && (!email|| email.length < 3 || !emailPattern.test(email))) {
-      errors.email = "Incorrect email format";
+    if (email !== "" && (!email || email.length < 3 || !emailPattern.test(email))) {
+      errors.email = t("incorrectEmailFormat");
     }
     if (password !== "" && (!password || password.length < 5)) {
-      errors.password = "Password is too short, minimum 5 characters";
+      errors.password = t("passwordTooShort");
     }
     setError(errors);
     return Object.keys(errors).length === 0; // Return true if valid
@@ -49,7 +51,7 @@ const CreateUserComp = (props) => {
       });
 
       if (res.ok) {
-        createNotification("success", "User created");
+        createNotification("success", t("userCreated"));
         navigate("/login");
       } else {
         const jsonData = await res.json();
@@ -59,7 +61,7 @@ const CreateUserComp = (props) => {
         setMessage(errorMessages);
       }
     } catch (error) {
-      setMessage("An error occurred. Please try again.");
+      setMessage(t("errorCreatingUser"));
     }
   };
 
@@ -70,34 +72,34 @@ const CreateUserComp = (props) => {
       {message && <Alert type="error" message={message} style={{ marginBottom: "10px" }} />}
 
       <Col>
-        <Card title="Register" style={{ minWidth: "300px", maxWidth: "500px" }}>
+        <Card title={t("registerUser")} style={{ minWidth: "300px", maxWidth: "500px" }}>
 
-        { /* Email of the user */ }
+          {/* Email of the user */}
           <Input
             size="large"
             type="text"
-            placeholder="Email"
+            placeholder={t("emailPlaceholder")}
             value={email}
             onChange={changeEmail}
-            aria-label="Email address"
+            aria-label={t("emailPlaceholder")}
             required
           />
           {error.email && <Text type="danger">{error.email}</Text>}
 
-          { /* Password of the user */ }
+          {/* Password of the user */}
           <Input
             style={{ marginTop: "10px" }}
             size="large"
             type="password"
-            placeholder="Password"
+            placeholder={t("passwordPlaceholder")}
             value={password}
             onChange={changePassword}
-            aria-label="Password"
+            aria-label={t("passwordPlaceholder")}
             required
           />
           {error.password && <Text type="danger">{error.password}</Text>}
 
-          { /* Button to create a user */ }
+          {/* Button to create a user */}
           <Button
             style={{ marginTop: "10px" }}
             type="primary"
@@ -105,7 +107,7 @@ const CreateUserComp = (props) => {
             block
             disabled={Object.keys(error).length > 0} // Disable if there are validation errors
           >
-            Register
+            {t("registerUser")}
           </Button>
         </Card>
       </Col>

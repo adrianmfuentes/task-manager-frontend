@@ -4,8 +4,10 @@ import { useNavigate } from "react-router-dom";
 import { Button, Card, List } from "antd";
 import { DeleteOutlined, EditOutlined, CheckOutlined } from "@ant-design/icons"; 
 import { formatDate } from "../Utils";
+import { useTranslation } from 'react-i18next'; // Importa el hook useTranslation
 
 const TasksComp = ({ createNotification }) => {
+    const { t } = useTranslation(); // Inicializa el hook de traducción
     const [tasks, setTasks] = useState([]); // State to hold tasks
     const [messageText, setMessageText] = useState(""); // State for error messages
     const navigate = useNavigate(); // Hook for navigation
@@ -27,9 +29,9 @@ const TasksComp = ({ createNotification }) => {
                 setMessageText(jsonData.error);
             }
         } catch (error) {
-            setMessageText("Failed to fetch tasks. Please try again.");
+            setMessageText(t("Failed to fetch tasks. Please try again.")); // Usa la traducción
         }
-    }, [navigate]);
+    }, [navigate, t]);
 
     useEffect(() => {
         getItems(); // Fetch tasks on component mount
@@ -50,14 +52,14 @@ const TasksComp = ({ createNotification }) => {
 
             if (res.ok) {
                 setTasks((prevTasks) => prevTasks.filter((task) => task.id !== id));
-                createNotification("success", "Task deleted");
+                createNotification("success", t("Task deleted")); // Usa la traducción
                 setMessageText(""); 
             } else {
                 const jsonData = await res.json();
-                setMessageText(jsonData.error || "Failed to delete task. Please try again.");
+                setMessageText(jsonData.error || t("Failed to delete task. Please try again.")); // Usa la traducción
             }
         } catch (error) {
-            setMessageText("Failed to delete task. Please try again.");
+            setMessageText(t("Failed to delete task. Please try again.")); // Usa la traducción
         }
     };
 
@@ -71,14 +73,14 @@ const TasksComp = ({ createNotification }) => {
             });
 
             if (res.ok) {
-                createNotification("success", "Task marked as completed");
+                createNotification("success", t("Task marked as completed")); // Usa la traducción
                 getItems(); // Refresh tasks list
             } else {
                 const jsonData = await res.json();
                 setMessageText(jsonData.error);
             }
         } catch (error) {
-            setMessageText("Failed to mark task as completed. Please try again.");
+            setMessageText(t("Failed to mark task as completed. Please try again.")); // Usa la traducción
         }
     };
 
@@ -96,7 +98,7 @@ const TasksComp = ({ createNotification }) => {
                 tabIndex={0} // Ensure keyboard navigation
                 aria-label="Task List Header"
             >
-                My Tasks
+                {t("My Tasks")} {/* Usa la traducción */}
             </Card>
 
             {/* Accessible error message */}
@@ -128,12 +130,12 @@ const TasksComp = ({ createNotification }) => {
                         >
                             {/* Description */}
                             <p style={{ color: "#555", marginBottom: "10px" }}>
-                                <strong>Description:</strong> {task.description}
+                                <strong>{t("Description:")}</strong> {task.description} {/* Usa la traducción */}
                             </p>
 
                             {/* Due date */}
                             <p style={{ fontWeight: "bold", color: "#888" }}>
-                                <strong>Due Date:</strong> {formatDate(task.dateFinish)}
+                                <strong>{t("Due Date:")}</strong> {formatDate(task.dateFinish)} {/* Usa la traducción */}
                             </p>
 
                             {/* Action buttons */}
@@ -145,7 +147,7 @@ const TasksComp = ({ createNotification }) => {
                                     aria-label={`Mark ${task.title} as completed`}
                                     style={{ flex: 1, marginRight: "8px" }}
                                 >
-                                    Complete
+                                    {t("Complete")} {/* Usa la traducción */}
                                 </Button>
                                 <Button
                                     onClick={() => moveToEditTask(task.id)}
@@ -153,7 +155,7 @@ const TasksComp = ({ createNotification }) => {
                                     aria-label={`Edit ${task.title}`}
                                     style={{ flex: 1, marginRight: "8px" }}
                                 >
-                                    Edit
+                                    {t("Edit")} {/* Usa la traducción */}
                                 </Button>
                                 <Button
                                     onClick={() => deleteTask(task.id)}
@@ -162,7 +164,7 @@ const TasksComp = ({ createNotification }) => {
                                     aria-label={`Delete ${task.title}`}
                                     style={{ flex: 1 }}
                                 >
-                                    Delete
+                                    {t("Delete")} {/* Usa la traducción */}
                                 </Button>
                             </div>
                         </Card>

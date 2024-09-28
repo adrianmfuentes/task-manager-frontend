@@ -4,18 +4,20 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Alert, Button, Card, Col, Input, Row, List, DatePicker, Typography } from "antd";
 import dayjs from "dayjs";
 import { isEmpty } from "lodash";
+import { useTranslation } from 'react-i18next'; // Importamos el hook de traducción
 
 const { Text } = Typography;
 
 const EditProjectComp = ({ createNotification }) => {
-    const { projectId } = useParams(); // Get project ID from URL
+    const { t } = useTranslation(); // Usamos el hook de traducción
+    const { projectId } = useParams(); // Obtener ID del proyecto desde la URL
     const [project, setProject] = useState({ name: "", description: "", finishDate: null, subtasks: [] });
     const [message, setMessage] = useState("");
     const [error, setError] = useState({});
     const [touched, setTouched] = useState({});
     const navigate = useNavigate();
 
-    // Fetch project details by ID
+    // Obtener detalles del proyecto por ID
     const fetchProject = useCallback(async () => {
         try {
             const response = await fetch(`${backendUrl}/projects/${projectId}?apiKey=${localStorage.getItem("apiKey")}`);
@@ -28,41 +30,41 @@ const EditProjectComp = ({ createNotification }) => {
                     subtasks: data.subtasks || []
                 });
             } else {
-                setMessage("Error fetching project details.");
+                setMessage(t('errorFetchingProject')); // Mensaje traducido
             }
         } catch (error) {
-            setMessage("Failed to fetch project data.");
+            setMessage(t('failedToFetchProjectData')); // Mensaje traducido
         }
-    }, [projectId]);
+    }, [projectId, t]);
 
     useEffect(() => {
         fetchProject();
     }, [fetchProject]);
 
-    // Validate input fields
+    // Validar campos de entrada
     const checkInputErrors = useCallback(() => {
         const updatedErrors = {};
         if (touched.name && (!project.name || project.name.length < 2)) {
-            updatedErrors.name = "Project name is too short.";
+            updatedErrors.name = t('projectErrorTitle'); // Traducción del error
         }
         if (touched.description && (!project.description || project.description.length < 5)) {
-            updatedErrors.description = "Project description is too short.";
+            updatedErrors.description = t('projectErrorDescription'); // Traducción del error
         }
         if (touched.finishDate) {
             if (project.finishDate && !dayjs.isDayjs(project.finishDate)) {
-                updatedErrors.finishDate = "Invalid due date.";
+                updatedErrors.finishDate = t('invalidDueDate'); // Traducción del error
             } else if (project.finishDate && project.finishDate.isBefore(dayjs())) {
-                updatedErrors.finishDate = "Project due date must be in the future.";
+                updatedErrors.finishDate = t('projectErrorDateFinish'); // Traducción del error
             }
         }
         setError(updatedErrors);
-    }, [project, touched]);
+    }, [project, touched, t]);
 
     useEffect(() => {
         checkInputErrors();
     }, [project, checkInputErrors]);
 
-    // Change project property
+    // Cambiar propiedad del proyecto
     const changeProperty = (propertyName, value) => {
         setProject((prevProject) => ({
             ...prevProject,
@@ -74,7 +76,7 @@ const EditProjectComp = ({ createNotification }) => {
         }));
     };
 
-    // Change due date
+    // Cambiar fecha de vencimiento
     const changeDate = (date) => {
         setProject((prevProject) => ({
             ...prevProject,
@@ -83,7 +85,7 @@ const EditProjectComp = ({ createNotification }) => {
         setTouched((prevTouched) => ({ ...prevTouched, finishDate: true }));
     };
 
-    // Change subtask
+    // Cambiar subtarea
     const changeSubtask = (index, value) => {
         const updatedSubtasks = [...project.subtasks];
         updatedSubtasks[index].task = value;
@@ -93,7 +95,7 @@ const EditProjectComp = ({ createNotification }) => {
         }));
     };
 
-    // Add a new subtask
+    // Agregar nueva subtarea
     const addSubtask = () => {
         setProject((prevProject) => ({
             ...prevProject,
@@ -101,7 +103,7 @@ const EditProjectComp = ({ createNotification }) => {
         }));
     };
 
-    // Handle project edit
+    // Manejar la edición del proyecto
     const clickEdit = async () => {
         if (isEmpty(error)) {
             try {
@@ -117,21 +119,21 @@ const EditProjectComp = ({ createNotification }) => {
                 });
 
                 if (res.ok) {
-                    createNotification("success", "Project updated successfully!");
+                    createNotification("success", t('projectUpdatedSuccessfully')); // Notificación traducida
                     navigate("/myProjects");
                 } else {
                     const jsonData = await res.json();
-                    setMessage(jsonData.error || "Failed to update project");
+                    setMessage(jsonData.error || t('failedToUpdateProject')); // Mensaje traducido
                 }
             } catch {
-                setMessage("Error occurred while updating project. Please try again.");
+                setMessage(t('errorUpdatingProject')); // Mensaje traducido
             }
         } else {
-            setMessage("Please correct the highlighted errors.");
+            setMessage(t('fixErrorsMessage')); // Mensaje traducido
         }
     };
 
-    // Button disable condition
+    // Condición para deshabilitar el botón
     const isButtonDisabled = !project.name || !project.finishDate || !isEmpty(error);
 
     return (
@@ -139,68 +141,68 @@ const EditProjectComp = ({ createNotification }) => {
             {message && <Alert type="error" message={message} style={{ marginBottom: "10px" }} />}
 
             <Col xs={24} sm={20} md={16} lg={12}>
-                <Card title="Edit Project" bordered={false}>
+                <Card title={t('editProject')} bordered={false}>
                     
-                    {/* Project Name Input */}
+                    {/* Campo de nombre del proyecto */}
                     <Input
                         size="large"
-                        placeholder="Project name"
+                        placeholder={t('projectTitle')}
                         value={project.name}
                         onChange={(e) => changeProperty("name", e.target.value)}
-                        aria-label="Project Name"
+                        aria-label={t('projectTitle')}
                     />
                     {error.name && <Text type="danger">{error.name}</Text>}
 
-                    {/* Project Description Input */}
+                    {/* Campo de descripción del proyecto */}
                     <Input.TextArea
                         style={{ marginTop: "10px" }}
                         size="large"
-                        placeholder="Project Description"
+                        placeholder={t('projectDescription')}
                         value={project.description}
                         onChange={(e) => changeProperty("description", e.target.value)}
-                        aria-label="Project Description"
+                        aria-label={t('projectDescription')}
                     />
                     {error.description && <Text type="danger">{error.description}</Text>}
 
-                    {/* Due Date Picker */}
+                    {/* Seleccionar fecha de vencimiento */}
                     <DatePicker
                         style={{ marginTop: "10px", width: "100%" }}
                         size="large"
                         showTime
                         value={project.finishDate ? project.finishDate : null}
                         onChange={changeDate}
-                        aria-label="Project Due Date"
+                        aria-label={t('selectDueDate')}
                     />
                     {error.finishDate && <Text type="danger">{error.finishDate}</Text>}
 
-                    {/* Subtasks */}
+                    {/* Subtareas */}
                     <List
                         bordered
                         dataSource={project.subtasks}
                         renderItem={(subtask, index) => (
                             <List.Item key={index}>
                                 <Input
-                                    placeholder={`Subtask ${index + 1}`}
+                                    placeholder={`${t('subtask')} ${index + 1}`}
                                     value={subtask.task}
                                     onChange={(e) => changeSubtask(index, e.target.value)}
                                     style={{ width: "100%" }}
-                                    aria-label={`Subtask ${index + 1}`}
+                                    aria-label={`${t('subtask')} ${index + 1}`}
                                 />
                             </List.Item>
                         )}
                         style={{ marginTop: "10px" }}
                     />
 
-                    {/* Add Subtask Button */}
+                    {/* Botón para agregar subtarea */}
                     <Button
                         type="dashed"
                         onClick={addSubtask}
                         style={{ marginTop: "10px", width: "100%" }}
                     >
-                        Add Subtask
+                        {t('addSubtask')}
                     </Button>
 
-                    {/* Edit Project Button */}
+                    {/* Botón para editar el proyecto */}
                     <Button
                         style={{ marginTop: "10px" }}
                         type="primary"
@@ -208,7 +210,7 @@ const EditProjectComp = ({ createNotification }) => {
                         block
                         disabled={isButtonDisabled}
                     >
-                        Edit Project
+                        {t('editProject')}
                     </Button>
                 </Card>
             </Col>

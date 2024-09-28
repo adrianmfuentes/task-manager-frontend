@@ -3,6 +3,7 @@ import React, { useEffect, useState, useCallback } from "react";
 import { backendUrl } from "../Globals";
 import { Alert, Button, Card, Col, DatePicker, Input, Row, Select, Typography } from "antd";
 import { useNavigate, useParams } from "react-router-dom";
+import { useTranslation } from "react-i18next"; // Import useTranslation hook
 
 const { Option } = Select;
 const { Text } = Typography;
@@ -10,6 +11,7 @@ const { Text } = Typography;
 const EditTaskComp = ({ createNotification }) => {
     const { taskId } = useParams();
     const navigate = useNavigate();
+    const { t } = useTranslation(); // Use translation hook
 
     // State variables for task data, messages, errors, and touched fields
     const [task, setTask] = useState({ title: "", description: "", priority: "medium", dateFinish: null });
@@ -30,12 +32,12 @@ const EditTaskComp = ({ createNotification }) => {
                     dateFinish: data.dateFinish ? dayjs(data.dateFinish) : null,
                 });
             } else {
-                setMessage("Error retrieving task details.");
+                setMessage(t("errorFetchingTask")); // Update to use translation
             }
         } catch {
-            setMessage("Failed to fetch task data.");
+            setMessage(t("failedToFetchTaskData")); // Update to use translation
         }
-    }, [taskId]);
+    }, [taskId, t]);
 
     useEffect(() => {
         fetchTask();
@@ -45,17 +47,17 @@ const EditTaskComp = ({ createNotification }) => {
     const checkInputErrors = useCallback(() => {
         const updatedErrors = {};
         if (touched.title && (!task.title || task.title.length < 2)) {
-            updatedErrors.title = "Task title is too short.";
+            updatedErrors.title = t("taskErrorTitle"); // Update to use translation
         }
         if (touched.description && (!task.description || task.description.length < 5)) {
-            updatedErrors.description = "Task description is too short.";
+            updatedErrors.description = t("taskErrorDescription"); // Update to use translation
         }
         if (touched.dateFinish && task.dateFinish && task.dateFinish.isBefore(dayjs())) {
-            updatedErrors.dateFinish = "Due date must be in the future.";
+            updatedErrors.dateFinish = t("taskErrorDateFinish"); // Update to use translation
         }
 
         setError(updatedErrors);
-    }, [task, touched]);
+    }, [task, touched, t]);
 
     useEffect(() => {
         checkInputErrors();
@@ -92,17 +94,17 @@ const EditTaskComp = ({ createNotification }) => {
                 });
 
                 if (res.ok) {
-                    createNotification("success", "Task updated successfully!");
+                    createNotification("success", t("taskUpdatedSuccessfully")); // Update to use translation
                     navigate("/myTasks");
                 } else {
                     const jsonData = await res.json();
-                    setMessage(jsonData.error || "Failed to update task");
+                    setMessage(jsonData.error || t("failedToUpdateTask")); // Update to use translation
                 }
             } catch {
-                setMessage("Error occurred while updating task. Please try again.");
+                setMessage(t("errorUpdatingTask")); // Update to use translation
             }
         } else {
-            setMessage("Please correct the highlighted errors.");
+            setMessage(t("fixErrorsMessage")); // Update to use translation
         }
     };
 
@@ -113,12 +115,12 @@ const EditTaskComp = ({ createNotification }) => {
             {message && <Alert type="error" message={message} style={{ marginBottom: "10px" }} />}
 
             <Col xs={24} sm={20} md={16} lg={12}>
-                <Card title="Edit Task" bordered={false}>
+                <Card title={t("editTask")} bordered={false}>
                     
                     {/* Task Title Input */}
                     <Input
                         size="large"
-                        placeholder="Task title"
+                        placeholder={t("taskTitle")}
                         value={task.title}
                         onChange={(e) => changeProperty("title", e.target.value)}
                         aria-label="Task Title"
@@ -129,7 +131,7 @@ const EditTaskComp = ({ createNotification }) => {
                     <Input.TextArea
                         style={{ marginTop: "10px" }}
                         size="large"
-                        placeholder="Task description"
+                        placeholder={t("taskDescription")}
                         value={task.description}
                         onChange={(e) => changeProperty("description", e.target.value)}
                         aria-label="Task Description"
@@ -144,9 +146,9 @@ const EditTaskComp = ({ createNotification }) => {
                         onChange={(value) => changeProperty("priority", value)}
                         aria-label="Task Priority"
                     >
-                        <Option value="low">Low</Option>
-                        <Option value="medium">Medium</Option>
-                        <Option value="high">High</Option>
+                        <Option value="low">{t("low")}</Option>
+                        <Option value="medium">{t("medium")}</Option>
+                        <Option value="high">{t("high")}</Option>
                     </Select>
 
                     {/* Due Date Picker */}
@@ -168,12 +170,12 @@ const EditTaskComp = ({ createNotification }) => {
                         block
                         disabled={isButtonDisabled}
                     >
-                        Edit Task
+                        {t("editTask")} {/* Use translation for button label */}
                     </Button>
                 </Card>
             </Col>
         </Row>
     );
-};
+}
 
 export default React.memo(EditTaskComp);

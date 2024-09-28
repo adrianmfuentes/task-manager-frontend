@@ -1,68 +1,81 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { backendUrl } from "../Globals";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from 'react-i18next';
 import { isEmpty } from "lodash";
 import { Alert, Button, Card, Col, Input, Row, Typography, List, DatePicker } from "antd";
 
 const { Text } = Typography;
 
 const CreateProjectComp = ({ createNotification }) => {
-    const [message, setMessage] = useState(""); // State for feedback messages
+    // Hook for translation using i18next
+    const { t } = useTranslation();
+
+    // State to manage form messages (feedback)
+    const [message, setMessage] = useState("");
+
+    // Initial state to manage the project form inputs
     const [project, setProject] = useState({
         title: "",
         description: "",
         dateFinish: null,
         subtasks: [],
-    }); // Initial state for project data
-    const [error, setError] = useState({}); // State for input validation errors
-    const [touched, setTouched] = useState({}); // State to track if the input has been modified by the user
+    });
+
+    // State to track validation errors
+    const [error, setError] = useState({});
+
+    // State to track if the user has touched/modified the input fields
+    const [touched, setTouched] = useState({});
+
     const navigate = useNavigate();
 
-    // Memoize the validation function to prevent unnecessary re-renders
+    // Validation logic, memoized to avoid unnecessary recalculations on re-renders
     const checkInputErrors = useCallback(() => {
         const updatedErrors = {};
 
-        // Validate project title
+        // Validate project title: should not be empty or too short
         if (touched.title && (!project.title || project.title.length < 2)) {
-            updatedErrors.title = "Project name is too short or missing.";
+            updatedErrors.title = t("errorTitle"); // Use translation for error message
         }
 
-        // Validate project description
+        // Validate project description: should have minimum length
         if (touched.description && (!project.description || project.description.length < 5)) {
-            updatedErrors.description = "Project description is too short.";
+            updatedErrors.description = t("errorDescription");
         }
 
-        // Validate due date
+        // Validate due date: must be in the future
         if (project.dateFinish && project.dateFinish < Date.now()) {
-            updatedErrors.dateFinish = "Project due date must be in the future.";
+            updatedErrors.dateFinish = t("errorDateFinish");
         }
 
         setError(updatedErrors);
-    }, [project, touched]);
+    }, [project, touched, t]);
 
-    // Effect to validate inputs on project state change
+    // Trigger validation whenever project data changes
     useEffect(() => {
         checkInputErrors();
     }, [project, checkInputErrors]);
 
-    // Update project properties
+    // Handle changes in the project fields (title, description, etc.)
     const changeProperty = (propertyName, value) => {
         setProject((prevProject) => ({
             ...prevProject,
             [propertyName]: value,
         }));
 
+        // Mark field as "touched" to enable validation on blur/change
         setTouched((prevTouched) => ({
             ...prevTouched,
             [propertyName]: true,
         }));
     };
 
-    // Handle date changes from DatePicker
+    // Handle date picker input changes
     const changeDate = (date) => {
         setProject((prevProject) => ({
             ...prevProject,
-            dateFinish: date ? date.valueOf() : null,
+            dateFinish: date ? date.valueOf() : null, // Store date as a timestamp
         }));
 
         setTouched((prevTouched) => ({
@@ -71,7 +84,7 @@ const CreateProjectComp = ({ createNotification }) => {
         }));
     };
 
-    // Add a new subtask
+    // Add an empty subtask to the subtasks array
     const addSubtask = () => {
         setProject((prevProject) => ({
             ...prevProject,
@@ -79,7 +92,7 @@ const CreateProjectComp = ({ createNotification }) => {
         }));
     };
 
-    // Update a subtask's value
+    // Update the value of a specific subtask by index
     const changeSubtask = (index, value) => {
         const updatedSubtasks = [...project.subtasks];
         updatedSubtasks[index].task = value;
@@ -90,15 +103,17 @@ const CreateProjectComp = ({ createNotification }) => {
         }));
     };
 
-    // Check if the create button should be disabled
+    // Check if the form submission button should be disabled
     const checkButtonDisabled = () => {
         return !project.title || !project.dateFinish || !isEmpty(error);
     };
 
-    // Handle project creation
+    // Handle project creation on form submission
     const clickCreate = async () => {
+        // Ensure there are no validation errors before proceeding
         if (isEmpty(error)) {
             try {
+                // Make an API request to create a project
                 const res = await fetch(`${backendUrl}/projects?apiKey=${localStorage.getItem("apiKey")}`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
@@ -106,82 +121,86 @@ const CreateProjectComp = ({ createNotification }) => {
                 });
 
                 if (res.ok) {
-                    createNotification("success", "Project created successfully");
+                    // Notify user of successful creation and redirect to projects page
+                    createNotification("success", t("projectCreated"));
                     navigate("/myProjects");
                 } else {
+                    // Display any backend errors received from the API
                     const jsonData = await res.json();
                     setMessage(jsonData.error);
                 }
             } catch {
-                setMessage("Error creating project. Please try again.");
+                // Handle network or server errors
+                setMessage(t("errorCreatingProject"));
             }
         } else {
-            setMessage("Cannot submit. Please fix input errors.");
+            // If validation errors exist, prevent submission
+            setMessage(t("fixErrorsMessage"));
         }
     };
 
     return (
         <Row align="middle" justify="center" style={{ minHeight: "70vh", padding: "10px" }}>
-            {message && <Alert type="error" message={message} style={{ marginBottom: "10px" }} />} {/* Error or success message */}
+            {/* Display feedback message for errors or success */}
+            {message && <Alert type="error" message={message} style={{ marginBottom: "10px" }} />}
 
             <Col xs={24} sm={20} md={16} lg={12}>
-                <Card title="Create Project" bordered={false}>
-
-                    {/* Project Title */}
+                <Card title={t("createProject")} bordered={false}>
+                    {/* Project Title input field */}
                     <Input
                         size="large"
                         type="text"
-                        placeholder="Project Title"
-                        value={project.title} // Fix the property name
+                        placeholder={t("projectTitle")}
+                        value={project.title}
                         onChange={(e) => changeProperty("title", e.target.value)}
-                        aria-label="Project Title"
-                        required // Mark as required for accessibility
+                        aria-label={t("projectTitle")}
+                        required
                     />
-                    {error.title && <Text type="danger">{error.title}</Text>} {/* Display error message if exists */}
+                    {error.title && <Text type="danger">{error.title}</Text>} {/* Display error if title is invalid */}
 
-                    {/* Project Description */}
+                    {/* Project Description input field */}
                     <Input.TextArea
                         style={{ marginTop: "10px" }}
                         size="large"
-                        placeholder="Project Description"
+                        placeholder={t("projectDescription")}
                         value={project.description}
                         onChange={(e) => changeProperty("description", e.target.value)}
-                        aria-label="Project Description"
-                        required // Mark as required for accessibility
+                        aria-label={t("projectDescription")}
+                        required
                     />
-                    {error.description && <Text type="danger">{error.description}</Text>} {/* Display error message if exists */}
+                    {error.description && <Text type="danger">{error.description}</Text>} {/* Display error if description is invalid */}
 
-                    {/* Due Date Picker */}
+                    {/* Due Date picker input */}
                     <DatePicker
                         style={{ marginTop: "10px", width: "100%" }}
                         size="large"
                         showTime
-                        placeholder="Select due date"
+                        placeholder={t("selectDueDate")}
                         onChange={changeDate}
-                        aria-label="Project Due Date"
+                        aria-label={t("projectDueDate")}
                     />
-                    {error.dateFinish && <Text type="danger">{error.dateFinish}</Text>} {/* Display error message if exists */}
+                    {error.dateFinish && <Text type="danger">{error.dateFinish}</Text>} {/* Display error if date is invalid */}
 
-                    {/* Add Subtask Button */}
+                    {/* Button to add a new subtask */}
                     <Button
                         type="dashed"
                         onClick={addSubtask}
                         style={{ marginTop: "10px", width: "100%" }}
                     >
-                        Add Subtask
+                        {t("addSubtask")}
                     </Button>
 
-                    {/* Subtasks List */}
+                    {/* Render the list of subtasks */}
                     <List
                         bordered
                         dataSource={project.subtasks}
                         renderItem={(subtask, index) => (
                             <List.Item key={index}>
-                                <Input                      
-                                    placeholder={`Subtask ${index + 1}`}
-                                    value={subtask.task}  
-                                    onChange={(e) => changeSubtask(index, e.target.value)}  
-                                    aria-label={`Subtask ${index + 1}`}
+                                <Input
+                                    placeholder={`${t("subtask")} ${index + 1}`}
+                                    value={subtask.task}
+                                    onChange={(e) => changeSubtask(index, e.target.value)}
+                                    aria-label={`${t("subtask")} ${index + 1}`}
                                     style={{ width: '100%', marginRight: '10px' }}
                                 />
                             </List.Item>
@@ -189,15 +208,15 @@ const CreateProjectComp = ({ createNotification }) => {
                         style={{ marginTop: "10px" }}
                     />
 
-                    {/* Create Project Button */}
+                    {/* Button to submit the form and create the project */}
                     <Button
                         style={{ marginTop: "10px" }}
                         type="primary"
                         onClick={clickCreate}
                         block
-                        disabled={checkButtonDisabled()} // Disable button if validation fails
+                        disabled={checkButtonDisabled()} // Disable the button if validation fails
                     >
-                        Create Project
+                        {t("createProject")}
                     </Button>
                 </Card>
             </Col>

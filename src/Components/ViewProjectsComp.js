@@ -4,11 +4,13 @@ import { formatDate } from "../Utils";
 import { useNavigate } from "react-router-dom";
 import { Button, Card, List, Checkbox, message } from "antd";
 import { DeleteOutlined, EditOutlined, CheckOutlined } from "@ant-design/icons";
+import { useTranslation } from 'react-i18next'; // Importar useTranslation
 
 const ProjectsComp = ({ createNotification }) => {
-    const [projects, setProjects] = useState([]); // State to hold the projects
-    const [messageText, setMessageText] = useState(""); // State for error messages
-    const navigate = useNavigate(); // Hook for navigation
+    const { t } = useTranslation(); // Inicializar la traducción
+    const [projects, setProjects] = useState([]); // Estado para mantener los proyectos
+    const [messageText, setMessageText] = useState(""); // Estado para mensajes de error
+    const navigate = useNavigate(); // Hook para navegación
 
     const getItems = useCallback(async () => {
         try {
@@ -19,20 +21,20 @@ const ProjectsComp = ({ createNotification }) => {
             }
             if (response.ok) {
                 const jsonData = await response.json();
-                setProjects(jsonData); // Update the projects state
+                setProjects(jsonData); // Actualizar el estado de los proyectos
             } else {
                 const jsonData = await response.json();
                 setMessageText(jsonData.error);
             }
         } catch (error) {
-            setMessageText("Failed to fetch projects. Please try again.");
+            setMessageText(t("errorFetchingProjectData")); // Usar traducción
         }
-    }, [navigate]);
+    }, [navigate, t]);
 
     const markSubtaskComplete = async (subtaskId, projectId, currentSubtask) => {
         const updatedSubtask = {
             ...currentSubtask,
-            completed: !currentSubtask.completed // Toggle completion status
+            completed: !currentSubtask.completed // Alternar estado de completado
         };
     
         try {
@@ -42,31 +44,31 @@ const ProjectsComp = ({ createNotification }) => {
                     "Content-Type": "application/json",
                     "apiKey": localStorage.getItem("apiKey")
                 },
-                body: JSON.stringify(updatedSubtask), // Send updated subtask
+                body: JSON.stringify(updatedSubtask), // Enviar subtask actualizado
             });
     
             if (response.ok) {
-                message.success(`Subtask marked as ${updatedSubtask.completed ? 'completed' : 'incomplete'}`);
-                getItems(); // Refresh the list after update
+                message.success(t(`Subtask marked as ${updatedSubtask.completed ? 'completed' : 'incomplete'}`)); // Usar traducción
+                getItems(); // Refrescar la lista después de actualizar
             } else {
                 const jsonData = await response.json();
                 setMessageText(jsonData.error);
             }
         } catch (error) {
-            setMessageText("Failed to update subtask. Please try again.");
+            setMessageText(t("errorUpdatingProject")); // Usar traducción
         }
     };
     
     useEffect(() => {
-        getItems(); // Fetch projects on component mount
+        getItems(); // Obtener proyectos al montar el componente
     }, [getItems]);
 
-    // Navigate to edit project page
+    // Navegar a la página de edición del proyecto
     const editProject = (id) => {
         navigate(`/project/edit/${id}`);
     };
 
-    // Delete project
+    // Eliminar proyecto
     const deleteProject = async (id) => {
         try {
             const res = await fetch(`${backendUrl}/projects/${id}?apiKey=${localStorage.getItem("apiKey")}`, {
@@ -76,18 +78,18 @@ const ProjectsComp = ({ createNotification }) => {
 
             if (res.ok) {
                 setProjects((prevProjects) => prevProjects.filter((project) => project.id !== id));
-                createNotification("success", "Project deleted");
+                createNotification("success", t("Project deleted")); // Usar traducción
                 setMessageText(""); 
             } else {
                 const jsonData = await res.json();
-                setMessageText(jsonData.error || "Failed to delete project. Please try again.");
+                setMessageText(jsonData.error || t("Failed to delete project. Please try again.")); // Usar traducción
             }
         } catch (error) {
-            setMessageText("Failed to delete project. Please try again.");
+            setMessageText(t("Failed to delete project. Please try again.")); // Usar traducción
         }
     };
 
-    // Complete project
+    // Completar proyecto
     const completeProject = async (id) => {
         try {
             const res = await fetch(`${backendUrl}/projects/${id}?apiKey=${localStorage.getItem("apiKey")}`, {
@@ -97,14 +99,14 @@ const ProjectsComp = ({ createNotification }) => {
             });
 
             if (res.ok) {
-                createNotification("success", "Project marked as completed");
-                getItems(); // Refresh the projects list
+                createNotification("success", t("Project marked as completed")); // Usar traducción
+                getItems(); // Refrescar la lista de proyectos
             } else {
                 const jsonData = await res.json();
                 setMessageText(jsonData.error);
             }
         } catch (error) {
-            setMessageText("Failed to mark project as completed. Please try again.");
+            setMessageText(t("Failed to mark project as completed. Please try again.")); // Usar traducción
         }
     };
 
@@ -121,7 +123,7 @@ const ProjectsComp = ({ createNotification }) => {
                 tabIndex={0}
                 aria-label="Project List Header"
             >
-                My Projects
+                {t("My Projects")} {/* Usar traducción */}
             </Card>
 
             {messageText && <h3 aria-live="assertive" style={{ color: "red" }}>{messageText}</h3>}
@@ -146,10 +148,10 @@ const ProjectsComp = ({ createNotification }) => {
                             }}
                         >
                             <p style={{ color: "#555", marginBottom: "10px" }}>
-                                <strong>Description:</strong> {project.description}
+                                <strong>{t("Description:")}</strong> {project.description} {/* Usar traducción */}
                             </p>
                             <p style={{ fontWeight: "bold", color: "#888" }}>
-                                <strong>Due Date:</strong> {formatDate(project.dateFinish)}
+                                <strong>{t("Due Date:")}</strong> {formatDate(project.dateFinish)} {/* Usar traducción */}
                             </p>
 
                             <List
@@ -172,7 +174,7 @@ const ProjectsComp = ({ createNotification }) => {
                             />
 
                             <div style={{ display: "flex", justifyContent: "space-around", marginTop: "10px" }}>
-                                {/* Complete project Button */}
+                                {/* Completar proyecto */}
                                 <Button
                                     onClick={() => completeProject(project.id)}
                                     type="primary"
@@ -180,20 +182,20 @@ const ProjectsComp = ({ createNotification }) => {
                                     aria-label={`Mark ${project.name} as completed`}
                                     style={{ flex: 1, marginRight: "8px" }}
                                 >
-                                    Complete
+                                    {t("Complete")} {/* Usar traducción */}
                                 </Button>
 
-                                {/* Edit project Button */}
+                                {/* Editar proyecto */}
                                 <Button
                                     onClick={() => editProject(project.id)}
                                     icon={<EditOutlined />}
                                     aria-label={`Edit ${project.name}`}
                                     style={{ flex: 1, marginRight: "8px" }}
                                 >
-                                    Edit
+                                    {t("Edit")} {/* Usar traducción */}
                                 </Button>
 
-                                {/* Delete project Button */}
+                                {/* Eliminar proyecto */}
                                 <Button
                                     onClick={() => deleteProject(project.id)}
                                     icon={<DeleteOutlined />}
@@ -201,7 +203,7 @@ const ProjectsComp = ({ createNotification }) => {
                                     aria-label={`Delete ${project.name}`}
                                     style={{ flex: 1 }}
                                 >
-                                    Delete
+                                    {t("Delete")} {/* Usar traducción */}
                                 </Button>
                             </div>
                         </Card>

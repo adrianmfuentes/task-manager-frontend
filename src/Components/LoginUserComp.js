@@ -4,8 +4,11 @@ import { backendUrl } from "../Globals";
 import { useNavigate } from "react-router-dom";
 import { emailPattern } from "../Utils";
 import { Button, Card, Col, Input, Row } from "antd";
+import { useTranslation } from 'react-i18next'; // Importar hook de traducción
 
 const LoginUserComp = ({ setLogin, createNotification }) => {
+    const { t } = useTranslation(); // Usar el hook para obtener traducciones
+
     // State declarations
     const [email, setEmail] = useState(""); // Email input state
     const [password, setPassword] = useState(""); // Password input state
@@ -40,12 +43,12 @@ const LoginUserComp = ({ setLogin, createNotification }) => {
 
         // Validate email format
         if (!email || email.length < 3 || !emailPattern.test(email)) {
-            updatedErrors.email = "Incorrect email format";
+            updatedErrors.email = t("incorrectEmailFormat"); // Usar traducción
         }
 
         // Validate password length
         if (!password || password.length < 5) {
-            updatedErrors.password = "Password must be at least 5 characters";
+            updatedErrors.password = t("passwordTooShort"); // Usar traducción
         }
 
         setError(updatedErrors); // Update error state
@@ -91,19 +94,19 @@ const LoginUserComp = ({ setLogin, createNotification }) => {
     return (
         <Row align="middle" justify="center" style={{ minHeight: "70vh" }}>
             <Col>
-                <Card title="Login" style={{ minWidth: "300px", maxWidth: "500px" }}>
+                <Card title={t("login")} style={{ minWidth: "300px", maxWidth: "500px" }}>
                     <Input
                         style={{ marginBottom: "10px" }}
                         size="large"
                         type="text"
-                        placeholder="Email"
+                        placeholder={t("emailPlaceholder")}
                         onChange={handleEmailChange} // Update email state on input change
                     />
                     <Input
                         style={{ marginBottom: "10px" }}
                         size="large"
                         type="password" // Set input type to password for security
-                        placeholder="Password"
+                        placeholder={t("passwordPlaceholder")}
                         onChange={handlePasswordChange} // Update password state on input change
                     />
                     <Button
@@ -112,7 +115,7 @@ const LoginUserComp = ({ setLogin, createNotification }) => {
                         block
                         disabled={!email || !password} // Disable button if fields are empty
                     >
-                        Login
+                        {t("login")} {/* Usar traducción para el botón */}
                     </Button>
                 </Card>
             </Col>

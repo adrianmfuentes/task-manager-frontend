@@ -2,14 +2,18 @@ import React, { useEffect, useState, useCallback } from "react";
 import { backendUrl } from "../Globals";
 import { useNavigate } from "react-router-dom";
 import { Alert, Button, Card, Col, DatePicker, Input, Row, Select, Typography } from "antd";
+import { useTranslation } from 'react-i18next';
 
 const { Option } = Select;
 const { Text } = Typography;
 
 const CreateTaskComp = ({ createNotification }) => {
+    // Hook for translation using i18next
+    const { t } = useTranslation();
+
     // State for feedback messages
     const [message, setMessage] = useState("");
-    
+
     // State for task data
     const [task, setTask] = useState({
         title: "",
@@ -20,9 +24,9 @@ const CreateTaskComp = ({ createNotification }) => {
 
     // State for input validation errors
     const [error, setError] = useState({});
-    
+
     // Track fields user has interacted with
-    const [touched, setTouched] = useState({}); 
+    const [touched, setTouched] = useState({});
 
     const navigate = useNavigate();
 
@@ -32,21 +36,21 @@ const CreateTaskComp = ({ createNotification }) => {
 
         // Validate task title
         if (touched.title && (!task.title || task.title.length < 2)) {
-            updatedErrors.name = "Task name is too short.";
+            updatedErrors.name = t("errorTitle"); // Use translation for error message
         }
 
         // Validate task description
         if (touched.description && (!task.description || task.description.length < 5)) {
-            updatedErrors.description = "Task description is too short.";
+            updatedErrors.description = t("errorDescription");
         }
 
         // Validate task finish date
         if (touched.dateFinish && task.dateFinish && task.dateFinish < Date.now()) {
-            updatedErrors.dateFinish = "Due date must be in the future.";
+            updatedErrors.dateFinish = t("errorDateFinish");
         }
 
         setError(updatedErrors);
-    }, [task, touched]);
+    }, [task, touched, t]);
 
     // useEffect to trigger validation on task state change
     useEffect(() => {
@@ -79,17 +83,17 @@ const CreateTaskComp = ({ createNotification }) => {
                 });
 
                 if (res.ok) {
-                    createNotification("success", "Task created successfully!");
+                    createNotification("success", t("taskCreated")); // Use translation for success message
                     navigate("/myTasks");
                 } else {
                     const jsonData = await res.json();
-                    setMessage(jsonData.error || "Failed to create task");
+                    setMessage(jsonData.error || t("errorCreatingTask"));
                 }
             } catch {
-                setMessage("Error occurred while creating task. Please try again.");
+                setMessage(t("errorCreatingTask"));
             }
         } else {
-            setMessage("Please correct the highlighted errors.");
+            setMessage(t("fixErrorsMessage"));
         }
     };
 
@@ -98,16 +102,17 @@ const CreateTaskComp = ({ createNotification }) => {
 
     return (
         <Row align="middle" justify="center" style={{ minHeight: "70vh", padding: "10px" }}>
+            {/* Display feedback message for errors or success */}
             {message && <Alert type="error" message={message} style={{ marginBottom: "10px" }} />}
 
             <Col xs={24} sm={20} md={16} lg={12}>
-                <Card title="Create Task" bordered={false}>
+                <Card title={t("createTask")} bordered={false}>
 
                     {/* Task Title Input */}
                     <Input
                         size="large"
-                        placeholder="Task title"
-                        aria-label="Task title"
+                        placeholder={t("taskTitle")}
+                        aria-label={t("taskTitle")}
                         value={task.title}
                         onChange={(e) => changeProperty("title", e.target.value)}
                         required // Mark as required for accessibility
@@ -118,8 +123,8 @@ const CreateTaskComp = ({ createNotification }) => {
                     <Input.TextArea
                         style={{ marginTop: "10px" }}
                         size="large"
-                        placeholder="Task description"
-                        aria-label="Task description"
+                        placeholder={t("taskDescription")}
+                        aria-label={t("taskDescription")}
                         value={task.description}
                         onChange={(e) => changeProperty("description", e.target.value)}
                         required // Mark as required for accessibility
@@ -130,14 +135,14 @@ const CreateTaskComp = ({ createNotification }) => {
                     <Select
                         style={{ marginTop: "10px", width: "100%" }}
                         size="large"
-                        placeholder="Select priority"
-                        aria-label="Task priority"
+                        placeholder={t("selectPriority")}
+                        aria-label={t("taskPriority")}
                         value={task.priority}
                         onChange={(value) => changeProperty("priority", value)}
                     >
-                        <Option value="low">Low</Option>
-                        <Option value="medium">Medium</Option>
-                        <Option value="high">High</Option>
+                        <Option value="low">{t("low")}</Option>
+                        <Option value="medium">{t("medium")}</Option>
+                        <Option value="high">{t("high")}</Option>
                     </Select>
 
                     {/* Due Date Picker */}
@@ -145,9 +150,9 @@ const CreateTaskComp = ({ createNotification }) => {
                         style={{ marginTop: "10px", width: "100%" }}
                         size="large"
                         showTime
-                        placeholder="Select due date"
+                        placeholder={t("selectDueDate")}
                         onChange={changeDate}
-                        aria-label="Task due date"
+                        aria-label={t("taskDueDate")}
                     />
                     {error.dateFinish && <Text type="danger">{error.dateFinish}</Text>}
 
@@ -155,12 +160,12 @@ const CreateTaskComp = ({ createNotification }) => {
                     <Button
                         style={{ marginTop: "10px" }}
                         type="primary"
-                        aria-label="Create Task"
+                        aria-label={t("createTask")}
                         onClick={clickCreate}
                         block
                         disabled={isButtonDisabled}
                     >
-                        Create Task
+                        {t("createTask")}
                     </Button>
                 </Card>
             </Col>
