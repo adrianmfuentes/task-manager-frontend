@@ -4,6 +4,7 @@ import { backendUrl } from "../Globals";
 import { Alert, Button, Card, Col, DatePicker, Input, Row, Select, Typography } from "antd";
 import { useNavigate, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next"; // Import useTranslation hook
+import '../Css/EditTask.css'; 
 
 const { Option } = Select;
 const { Text } = Typography;
@@ -47,15 +48,15 @@ const EditTaskComp = ({ createNotification }) => {
     const checkInputErrors = useCallback(() => {
         const updatedErrors = {};
         if (touched.title && (!task.title || task.title.length < 2)) {
-            updatedErrors.title = t("taskErrorTitle"); // Update to use translation
+            updatedErrors.title = t("taskErrorTitle"); // Actualiza para usar traducción
         }
         if (touched.description && (!task.description || task.description.length < 5)) {
-            updatedErrors.description = t("taskErrorDescription"); // Update to use translation
+            updatedErrors.description = t("taskErrorDescription"); // Actualiza para usar traducción
         }
         if (touched.dateFinish && task.dateFinish && task.dateFinish.isBefore(dayjs())) {
-            updatedErrors.dateFinish = t("taskErrorDateFinish"); // Update to use translation
+            updatedErrors.dateFinish = t("taskErrorDateFinish"); // Actualiza para usar traducción
         }
-
+    
         setError(updatedErrors);
     }, [task, touched, t]);
 
@@ -70,10 +71,10 @@ const EditTaskComp = ({ createNotification }) => {
     };
 
     // Update finish date
-    const changeDate = (date) => {
+    const changeDate = (date) => { 
         setTask((prevTask) => ({
             ...prevTask,
-            dateFinish: date ? date.valueOf() : null, // Store as timestamp
+            dateFinish: date ? dayjs(date) : null // Store as Day.js object
         }));
         setTouched((prevTouched) => ({ ...prevTouched, dateFinish: true }));
     };
@@ -111,11 +112,11 @@ const EditTaskComp = ({ createNotification }) => {
     const isButtonDisabled = !task.title || !task.dateFinish || Object.keys(error).length > 0;
 
     return (
-        <Row align="middle" justify="center" style={{ minHeight: "70vh", padding: "10px" }}>
-            {message && <Alert type="error" message={message} style={{ marginBottom: "10px" }} />}
+        <Row align="middle" justify="center" className="edit-task-container" style={{ minHeight: "70vh" }}>
+            {message && <Alert type="error" message={message} className="alert-message" />}
 
             <Col xs={24} sm={20} md={16} lg={12}>
-                <Card title={t("editTask")} bordered={false}>
+                <Card title={t("Edit Task")} bordered={false}>
                     
                     {/* Task Title Input */}
                     <Input
@@ -124,8 +125,9 @@ const EditTaskComp = ({ createNotification }) => {
                         value={task.title}
                         onChange={(e) => changeProperty("title", e.target.value)}
                         aria-label="Task Title"
+                        className="input-field"
                     />
-                    {error.title && <Text type="danger">{error.title}</Text>}
+                    {error.title && <Text type="danger" className="error-text">{error.title}</Text>}
 
                     {/* Task Description Input */}
                     <Input.TextArea
@@ -135,8 +137,9 @@ const EditTaskComp = ({ createNotification }) => {
                         value={task.description}
                         onChange={(e) => changeProperty("description", e.target.value)}
                         aria-label="Task Description"
+                        className="input-field"
                     />
-                    {error.description && <Text type="danger">{error.description}</Text>}
+                    {error.description && <Text type="danger" className="error-text">{error.description}</Text>}
 
                     {/* Task Priority Select */}
                     <Select
@@ -145,6 +148,7 @@ const EditTaskComp = ({ createNotification }) => {
                         value={task.priority}
                         onChange={(value) => changeProperty("priority", value)}
                         aria-label="Task Priority"
+                        className="input-field"
                     >
                         <Option value="low">{t("low")}</Option>
                         <Option value="medium">{t("medium")}</Option>
@@ -159,18 +163,21 @@ const EditTaskComp = ({ createNotification }) => {
                         value={task.dateFinish ? task.dateFinish : null}
                         onChange={changeDate}
                         aria-label="Due Date"
+                        className="input-field"
                     />
-                    {error.dateFinish && <Text type="danger">{error.dateFinish}</Text>}
+                    {error.dateFinish && <Text type="danger" className="error-text">{error.dateFinish}</Text>}
 
+                    <br></br><br></br>
+                    
                     {/* Edit Task Button */}
                     <Button
-                        style={{ marginTop: "10px" }}
+                        className="edit-task-button"
                         type="primary"
                         onClick={clickEdit}
                         block
                         disabled={isButtonDisabled}
                     >
-                        {t("editTask")} {/* Use translation for button label */}
+                        {t("Edit task")} {/* Use translation for button label */}
                     </Button>
                 </Card>
             </Col>

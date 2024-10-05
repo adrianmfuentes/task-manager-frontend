@@ -17,9 +17,11 @@ import PrivacyPolicy from './Footer/PrivacyPolicy';
 import TermsOfService from './Footer/TermsOfService';
 import Contact from './Footer/Contact';
 import LanguageSelector from './Components/LanguageSelector';
-import { useTranslation } from 'react-i18next'; // Importa useTranslation
+import { useTranslation } from 'react-i18next'; 
 import { backendUrl } from './Globals';
 import LandingPage from './Components/LandingPage';
+import './Css/Navigation.css'; 
+import './Css/Global.css';
 
 const CreateTaskComp = React.lazy(() => import('./Components/CreateTaskComp'));
 
@@ -70,11 +72,14 @@ function App() {
     { key: "menuLogin", label: <Link to="/login">{t("Login")}</Link> }
   ];
 
+  // Menú dropdown con opción de idioma
   const menu = (
     <Menu>
-      {menuItems.map(item => item.label)}
       <Menu.Divider />
-      <LanguageSelector />
+      {/* Submenú Idioma */}
+      <Menu.SubMenu key="sub1" title={t("Language")}>
+        <LanguageSelector /> {/* Componente que permite seleccionar el idioma */}
+      </Menu.SubMenu>
     </Menu>
   );
 
@@ -82,8 +87,8 @@ function App() {
     <>
       {contextHolder}
       <Layout className='layout' style={{ minHeight: '100vh' }}>
-        <Header>
-          <div style={{ display: 'flex', alignItems: 'center' }}>
+        <Header className="navigation-header"> {/* Aplica clase CSS a Header */}
+          <div className="navigation-menu"> {/* Contenedor de menú */}
             <Dropdown overlay={menu} trigger={['click']} placement="bottomLeft">
               <Button icon={<MenuOutlined />} />
             </Dropdown>
@@ -97,11 +102,10 @@ function App() {
           </div>
         </Header>
 
-        <Content style={{ padding: "20px 50px" }}>
+        <Content className="content-background">
           <Suspense fallback={<div>Loading...</div>}>
             <Routes>
               <Route path="/" element={<LandingPage />} /> 
-              {/*<Route path="/" element={<p>{t("Website Index (under construction)")}</p>} />*/}
               <Route path="/register" element={<CreateUserComp createNotification={createNotif} />} />
               <Route path="/login" element={<LoginUserComp setLogin={setLogin} createNotification={createNotif} />} />
               <Route path="/myTasks" element={<ViewTasksComp createNotification={createNotif} />} />

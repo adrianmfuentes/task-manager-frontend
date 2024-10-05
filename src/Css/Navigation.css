@@ -1,0 +1,40 @@
+/* src/Css/Navigation.css */
+
+/* Estilo para la barra de navegación */
+.navigation-header {
+    background-color: #001529; /* Color de fondo de la barra */
+    padding: 0 20px; /* Espaciado horizontal */
+}
+
+/* Estilo para el contenedor del menú */
+.navigation-menu {
+    display: flex;
+    align-items: center;
+}
+
+/* Estilo para los elementos del menú */
+.navigation-menu .ant-menu-item {
+    margin: 0 10px; /* Espaciado uniforme entre elementos del menú */
+}
+
+/* Estilo para el menú desplegable */
+.ant-dropdown-menu {
+    padding: 10px; /* Espaciado interno del menú desplegable */
+}
+
+/* Estilo para el submenú de idiomas */
+.ant-dropdown-menu-submenu {
+    margin: 5px 0; /* Espaciado entre el submenú y otros elementos */
+}
+
+/* Estilo para el botón del menú */
+.ant-btn {
+    background-color: #1890ff; /* Color de fondo del botón */
+    border: none; /* Sin borde */
+    color: white; /* Color del texto del botón */
+}
+
+/* Hover effect para el botón */
+.ant-btn:hover {
+    background-color: #40a9ff; /* Color de fondo al pasar el cursor */
+}

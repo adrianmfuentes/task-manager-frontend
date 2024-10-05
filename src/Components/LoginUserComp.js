@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { emailPattern } from "../Utils";
 import { Button, Card, Col, Input, Row } from "antd";
 import { useTranslation } from 'react-i18next'; // Importar hook de traducción
+import '../Css/LoginUser.css'; 
 
 const LoginUserComp = ({ setLogin, createNotification }) => {
     const { t } = useTranslation(); // Usar el hook para obtener traducciones
@@ -92,30 +93,31 @@ const LoginUserComp = ({ setLogin, createNotification }) => {
     };
 
     return (
-        <Row align="middle" justify="center" style={{ minHeight: "70vh" }}>
+        <Row align="middle" justify="center" className="login-user-container">
             <Col>
-                <Card title={t("login")} style={{ minWidth: "300px", maxWidth: "500px" }}>
+                <Card title={t("Login")} className="login-card">
                     <Input
-                        style={{ marginBottom: "10px" }}
+                        className="login-input"
                         size="large"
                         type="text"
                         placeholder={t("emailPlaceholder")}
                         onChange={handleEmailChange} // Update email state on input change
                     />
                     <Input
-                        style={{ marginBottom: "10px" }}
+                        className="login-input"
                         size="large"
                         type="password" // Set input type to password for security
                         placeholder={t("passwordPlaceholder")}
                         onChange={handlePasswordChange} // Update password state on input change
                     />
                     <Button
+                        className="login-button"
                         type="primary"
                         onClick={handleLoginClick} // Trigger login handler on button click
                         block
                         disabled={!email || !password} // Disable button if fields are empty
                     >
-                        {t("login")} {/* Usar traducción para el botón */}
+                        {t("Login")} {/* Usar traducción para el botón */}
                     </Button>
                 </Card>
             </Col>

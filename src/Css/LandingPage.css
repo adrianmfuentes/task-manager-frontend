@@ -4,9 +4,9 @@
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    background-image: url('https://example.com/your-background-image.jpg'); /* Aquí colocas la URL de tu imagen de fondo */
     background-size: cover;
     background-position: center;
+    background-color: #FAF3E0;
   }
   
   .landing-page-content {

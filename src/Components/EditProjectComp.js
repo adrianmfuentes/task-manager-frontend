@@ -5,13 +5,15 @@ import { Alert, Button, Card, Col, Input, Row, List, DatePicker, Typography } fr
 import dayjs from "dayjs";
 import { isEmpty } from "lodash";
 import { useTranslation } from 'react-i18next'; // Importamos el hook de traducción
+import '../Css/EditProject.css'; 
+import { formatTimestamp } from "../Utils";
 
 const { Text } = Typography;
 
 const EditProjectComp = ({ createNotification }) => {
     const { t } = useTranslation(); // Usamos el hook de traducción
     const { projectId } = useParams(); // Obtener ID del proyecto desde la URL
-    const [project, setProject] = useState({ name: "", description: "", finishDate: null, subtasks: [] });
+    const [project, setProject] = useState({ name: "", description: "", dateFinish: null, subtasks: [] });
     const [message, setMessage] = useState("");
     const [error, setError] = useState({});
     const [touched, setTouched] = useState({});
@@ -26,7 +28,7 @@ const EditProjectComp = ({ createNotification }) => {
                 setProject({
                     name: data.title || "",
                     description: data.description || "",
-                    finishDate: data.finishDate ? dayjs(data.finishDate) : null, 
+                    dateFinish: data.dateFinish ? dayjs(data.dateFinish) : null, 
                     subtasks: data.subtasks || []
                 });
             } else {
@@ -50,11 +52,11 @@ const EditProjectComp = ({ createNotification }) => {
         if (touched.description && (!project.description || project.description.length < 5)) {
             updatedErrors.description = t('projectErrorDescription'); // Traducción del error
         }
-        if (touched.finishDate) {
-            if (project.finishDate && !dayjs.isDayjs(project.finishDate)) {
-                updatedErrors.finishDate = t('invalidDueDate'); // Traducción del error
-            } else if (project.finishDate && project.finishDate.isBefore(dayjs())) {
-                updatedErrors.finishDate = t('projectErrorDateFinish'); // Traducción del error
+        if (touched.dateFinish) {
+            if (project.dateFinish && !dayjs.isDayjs(project.dateFinish)) {
+                updatedErrors.dateFinish = t('invalidDueDate'); // Traducción del error
+            } else if (project.dateFinish && project.dateFinish.isBefore(dayjs())) {
+                updatedErrors.dateFinish = t('projectErrorDateFinish'); // Traducción del error
             }
         }
         setError(updatedErrors);
@@ -80,9 +82,13 @@ const EditProjectComp = ({ createNotification }) => {
     const changeDate = (date) => {
         setProject((prevProject) => ({
             ...prevProject,
-            finishDate: date ? date.valueOf() : null,
+            dateFinish: date ? formatTimestamp(date.valueOf()) : null, // Store formatted date
         }));
-        setTouched((prevTouched) => ({ ...prevTouched, finishDate: true }));
+    
+        setTouched((prevTouched) => ({
+            ...prevTouched,
+            dateFinish: true,
+        }));
     };
 
     // Cambiar subtarea
@@ -109,7 +115,7 @@ const EditProjectComp = ({ createNotification }) => {
             try {
                 const projectToSend = {
                     ...project,
-                    finishDate: project.finishDate ? dayjs(project.finishDate).format('YYYY-MM-DD HH:mm:ss') : null
+                    dateFinish: project.dateFinish ? dayjs(project.dateFinish).format('YYYY-MM-DD HH:mm:ss') : null
                 };
 
                 const res = await fetch(`${backendUrl}/projects/${projectId}?apiKey=${localStorage.getItem("apiKey")}`, {
@@ -134,48 +140,58 @@ const EditProjectComp = ({ createNotification }) => {
     };
 
     // Condición para deshabilitar el botón
-    const isButtonDisabled = !project.name || !project.finishDate || !isEmpty(error);
+    const isButtonDisabled = !project.name || !project.dateFinish || !isEmpty(error);
 
     return (
         <Row align="middle" justify="center" style={{ minHeight: "70vh", padding: "10px" }}>
-            {message && <Alert type="error" message={message} style={{ marginBottom: "10px" }} />}
+            {message && <Alert type="error" message={message} className="alert-message" />}
 
             <Col xs={24} sm={20} md={16} lg={12}>
-                <Card title={t('editProject')} bordered={false}>
+                <Card title={t('Edit Project')} bordered={false}>
                     
-                    {/* Campo de nombre del proyecto */}
+                    <h2 className="edit-project-title">{t('Edit project')}</h2> {/* Agregando clase al título */}
+
                     <Input
+                        className="input-field"
                         size="large"
                         placeholder={t('projectTitle')}
                         value={project.name}
                         onChange={(e) => changeProperty("name", e.target.value)}
                         aria-label={t('projectTitle')}
                     />
-                    {error.name && <Text type="danger">{error.name}</Text>}
+                    {error.name && <Text type="danger" className="error-text">{error.name}</Text>}
 
-                    {/* Campo de descripción del proyecto */}
                     <Input.TextArea
-                        style={{ marginTop: "10px" }}
+                        className="input-field"
                         size="large"
                         placeholder={t('projectDescription')}
                         value={project.description}
                         onChange={(e) => changeProperty("description", e.target.value)}
                         aria-label={t('projectDescription')}
                     />
-                    {error.description && <Text type="danger">{error.description}</Text>}
+                    {error.description && <Text type="danger" className="error-text">{error.description}</Text>}
 
-                    {/* Seleccionar fecha de vencimiento */}
                     <DatePicker
-                        style={{ marginTop: "10px", width: "100%" }}
+                        className="input-field"
+                        style={{ width: "100%" }}
                         size="large"
                         showTime
-                        value={project.finishDate ? project.finishDate : null}
+                        value={project.dateFinish ? project.dateFinish : null}
                         onChange={changeDate}
                         aria-label={t('selectDueDate')}
                     />
-                    {error.finishDate && <Text type="danger">{error.finishDate}</Text>}
+                    {error.dateFinish && <Text type="danger" className="error-text">{error.dateFinish}</Text>}
 
-                    {/* Subtareas */}
+                    <br></br>
+                    
+                    <Button
+                        type="dashed"
+                        onClick={addSubtask}
+                        className="add-subtask-button"
+                    >
+                        {t('Add subtask')}
+                    </Button>
+
                     <List
                         bordered
                         dataSource={project.subtasks}
@@ -193,24 +209,16 @@ const EditProjectComp = ({ createNotification }) => {
                         style={{ marginTop: "10px" }}
                     />
 
-                    {/* Botón para agregar subtarea */}
+                    <br></br><br></br>
+                    
                     <Button
-                        type="dashed"
-                        onClick={addSubtask}
-                        style={{ marginTop: "10px", width: "100%" }}
-                    >
-                        {t('addSubtask')}
-                    </Button>
-
-                    {/* Botón para editar el proyecto */}
-                    <Button
-                        style={{ marginTop: "10px" }}
+                        className="edit-project-button"
                         type="primary"
                         onClick={clickEdit}
                         block
                         disabled={isButtonDisabled}
                     >
-                        {t('editProject')}
+                        {t('Edit project')}
                     </Button>
                 </Card>
             </Col>

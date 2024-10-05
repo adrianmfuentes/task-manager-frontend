@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
 import { isEmpty } from "lodash";
 import { Alert, Button, Card, Col, Input, Row, Typography, List, DatePicker } from "antd";
+import '../Css/CreateProject.css'; 
+import { formatTimestamp } from "../Utils";
 
 const { Text } = Typography;
 
@@ -75,9 +77,9 @@ const CreateProjectComp = ({ createNotification }) => {
     const changeDate = (date) => {
         setProject((prevProject) => ({
             ...prevProject,
-            dateFinish: date ? date.valueOf() : null, // Store date as a timestamp
+            dateFinish: date ? formatTimestamp(date.valueOf()) : null, // Store formatted date
         }));
-
+    
         setTouched((prevTouched) => ({
             ...prevTouched,
             dateFinish: true,
@@ -140,13 +142,11 @@ const CreateProjectComp = ({ createNotification }) => {
     };
 
     return (
-        <Row align="middle" justify="center" style={{ minHeight: "70vh", padding: "10px" }}>
-            {/* Display feedback message for errors or success */}
+        <Row align="middle" justify="center" className="row-container"> {/* Usa la clase de CSS */}
             {message && <Alert type="error" message={message} style={{ marginBottom: "10px" }} />}
 
             <Col xs={24} sm={20} md={16} lg={12}>
-                <Card title={t("createProject")} bordered={false}>
-                    {/* Project Title input field */}
+                <Card title={t("Create Project")} bordered={false} className="project-card"> {/* Clase para el card */}
                     <Input
                         size="large"
                         type="text"
@@ -155,22 +155,21 @@ const CreateProjectComp = ({ createNotification }) => {
                         onChange={(e) => changeProperty("title", e.target.value)}
                         aria-label={t("projectTitle")}
                         required
+                        className="input-field" // Clase para los inputs
                     />
-                    {error.title && <Text type="danger">{error.title}</Text>} {/* Display error if title is invalid */}
+                    {error.title && <Text type="danger" className="error-message">{error.title}</Text>} {/* Error title */}
 
-                    {/* Project Description input field */}
                     <Input.TextArea
-                        style={{ marginTop: "10px" }}
                         size="large"
                         placeholder={t("projectDescription")}
                         value={project.description}
                         onChange={(e) => changeProperty("description", e.target.value)}
                         aria-label={t("projectDescription")}
                         required
+                        className="input-field" // Clase para los inputs
                     />
-                    {error.description && <Text type="danger">{error.description}</Text>} {/* Display error if description is invalid */}
+                    {error.description && <Text type="danger" className="error-message">{error.description}</Text>} {/* Error description */}
 
-                    {/* Due Date picker input */}
                     <DatePicker
                         style={{ marginTop: "10px", width: "100%" }}
                         size="large"
@@ -179,18 +178,16 @@ const CreateProjectComp = ({ createNotification }) => {
                         onChange={changeDate}
                         aria-label={t("projectDueDate")}
                     />
-                    {error.dateFinish && <Text type="danger">{error.dateFinish}</Text>} {/* Display error if date is invalid */}
+                    {error.dateFinish && <Text type="danger" className="error-message">{error.dateFinish}</Text>} {/* Error date */}
 
-                    {/* Button to add a new subtask */}
                     <Button
                         type="dashed"
                         onClick={addSubtask}
-                        style={{ marginTop: "10px", width: "100%" }}
+                        className="input-field" // Clase para los botones
                     >
-                        {t("addSubtask")}
+                        {t("Add subtask")}
                     </Button>
 
-                    {/* Render the list of subtasks */}
                     <List
                         bordered
                         dataSource={project.subtasks}
@@ -208,13 +205,12 @@ const CreateProjectComp = ({ createNotification }) => {
                         style={{ marginTop: "10px" }}
                     />
 
-                    {/* Button to submit the form and create the project */}
                     <Button
-                        style={{ marginTop: "10px" }}
                         type="primary"
                         onClick={clickCreate}
                         block
-                        disabled={checkButtonDisabled()} // Disable the button if validation fails
+                        disabled={checkButtonDisabled()}
+                        className="primary-button" // Clase para el botón principal
                     >
                         {t("createProject")}
                     </Button>

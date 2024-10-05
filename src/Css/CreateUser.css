@@ -1,0 +1,30 @@
+/* src/Css/CreateUserComp.css */
+
+/* Contenedor principal del componente */
+.row-container {
+    min-height: 70vh;
+    padding: 10px;
+    background-color: #FAF3E0;
+}
+
+/* Estilo del card que contiene el formulario */
+.user-card {
+    border-radius: 8px; /* Esquinas redondeadas */
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+    background-color: #D5C3A3;
+}
+
+/* Estilo de los campos de entrada */
+.input-field {
+    margin-top: 10px; /* Espaciado superior */
+}
+
+/* Estilo para los botones */
+.primary-button {
+    margin-top: 10px; /* Espaciado superior */
+}
+
+/* Estilo para los mensajes de error */
+.error-message {
+    color: red; /* Color rojo para errores */
+}

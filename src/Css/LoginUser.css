@@ -1,0 +1,31 @@
+/* src/Css/LoginUser.css */
+
+/* Estilo general para el contenedor del formulario */
+.login-user-container {
+    display: flex;
+    align-items: center; /* Centra verticalmente el contenido */
+    justify-content: center; /* Centra horizontalmente el contenido */
+    min-height: 70vh; /* Altura mínima del contenedor */
+    padding: 10px; /* Espaciado interno */
+    background-color: #FAF3E0;
+}
+
+/* Estilo para la tarjeta del formulario */
+.login-card {
+    min-width: 300px; /* Ancho mínimo de la tarjeta */
+    max-width: 500px; /* Ancho máximo de la tarjeta */
+    padding: 20px; /* Espaciado interno */
+    border-radius: 8px; /* Bordes redondeados */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); /* Sombra para profundidad */
+    background-color: #D5C3A3;
+}
+
+/* Estilo para los inputs */
+.login-input {
+    margin-bottom: 10px; /* Espaciado inferior */
+}
+
+/* Estilo para el botón */
+.login-button {
+    margin-top: 10px; /* Espaciado superior */
+}

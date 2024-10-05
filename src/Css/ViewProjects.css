@@ -1,0 +1,66 @@
+/* src/Css/ViewProjects.css */
+
+/* Estilo general para el contenedor principal del componente */
+.projects-container {
+    padding: 10px; /* Espaciado interno del contenedor */
+}
+
+/* Estilo para la tarjeta del encabezado de proyectos */
+.projects-header {
+    text-align: center; /* Centrar el texto */
+    font-size: 24px; /* Tamaño de fuente */
+    font-weight: bold; /* Negrita */
+    margin-bottom: 20px; /* Espaciado inferior */
+    background-color: #FAF3E0;
+}
+
+/* Estilo para los mensajes de error */
+.error-message {
+    color: red; /* Color del mensaje de error */
+}
+
+/* Estilo para la lista de proyectos */
+.project-list {
+    margin-top: 10px; /* Espaciado superior */
+}
+
+/* Estilo para las tarjetas de cada proyecto */
+.project-card {
+    display: flex; /* Flexbox para disposición */
+    flex-direction: column; /* Disposición vertical */
+    justify-content: space-between; /* Espaciado entre elementos */
+    padding: 16px; /* Espaciado interno */
+    background-color: #FAF3E0;
+    border-radius: 8px; /* Bordes redondeados */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra para profundidad */
+}
+
+/* Estilo para el texto de descripción del proyecto */
+.project-description {
+    color: #555; /* Color del texto de la descripción */
+    margin-bottom: 10px; /* Espaciado inferior */
+}
+
+/* Estilo para la fecha de vencimiento */
+.due-date {
+    font-weight: bold; /* Negrita */
+    color: #888; /* Color gris */
+}
+
+/* Estilo para los botones de acción del proyecto */
+.project-actions {
+    display: flex; /* Flexbox para disposición */
+    justify-content: space-around; /* Espaciado entre botones */
+    margin-top: 10px; /* Espaciado superior */
+}
+
+/* Estilo para los botones individuales */
+.project-action-button {
+    flex: 1; /* Toma el mismo espacio en el contenedor */
+    margin-right: 8px; /* Espaciado a la derecha */
+}
+
+/* Eliminar el margen derecho del último botón */
+.project-action-button:last-child {
+    margin-right: 0; /* Sin margen derecho */
+}

@@ -1,10 +1,11 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { backendUrl } from "../Globals";
-import { formatDate } from "../Utils";
+import { convertDateTimeToReadableFormat } from "../Utils";
 import { useNavigate } from "react-router-dom";
 import { Button, Card, List, Checkbox, message } from "antd";
 import { DeleteOutlined, EditOutlined, CheckOutlined } from "@ant-design/icons";
 import { useTranslation } from 'react-i18next'; // Importar useTranslation
+import '../Css/ViewProjects.css'; 
 
 const ProjectsComp = ({ createNotification }) => {
     const { t } = useTranslation(); // Inicializar la traducción
@@ -111,24 +112,19 @@ const ProjectsComp = ({ createNotification }) => {
     };
 
     return (
-        <div role="main" style={{ padding: "10px" }}>
+        <div role="main" className="projects-container">
             <Card
-                style={{
-                    textAlign: "center",
-                    fontSize: "24px",
-                    fontWeight: "bold",
-                    marginBottom: "20px",
-                    backgroundColor: "#f0f2f5",
-                }}
+                className="projects-header"
                 tabIndex={0}
                 aria-label="Project List Header"
             >
                 {t("My Projects")} {/* Usar traducción */}
             </Card>
 
-            {messageText && <h3 aria-live="assertive" style={{ color: "red" }}>{messageText}</h3>}
+            {messageText && <h3 aria-live="assertive" className="error-message">{messageText}</h3>}
 
             <List
+                className="project-list"
                 grid={{ gutter: 16, xs: 1, sm: 1, md: 2, lg: 3, xl: 4 }}
                 dataSource={projects}
                 renderItem={(project) => (
@@ -137,21 +133,13 @@ const ProjectsComp = ({ createNotification }) => {
                             hoverable
                             title={project.name}
                             aria-label={`Project: ${project.name}`}
-                            style={{
-                                display: "flex",
-                                flexDirection: "column",
-                                justifyContent: "space-between",
-                                padding: "16px",
-                                backgroundColor: "#ffffff",
-                                borderRadius: "8px",
-                                boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-                            }}
+                            className="project-card"
                         >
-                            <p style={{ color: "#555", marginBottom: "10px" }}>
+                            <p className="project-description">
                                 <strong>{t("Description:")}</strong> {project.description} {/* Usar traducción */}
                             </p>
-                            <p style={{ fontWeight: "bold", color: "#888" }}>
-                                <strong>{t("Due Date:")}</strong> {formatDate(project.dateFinish)} {/* Usar traducción */}
+                            <p className="due-date">
+                                <strong>{t("Due Date:")}</strong> {convertDateTimeToReadableFormat(project.dateFinish)} {/* Usar traducción */}
                             </p>
 
                             <List
@@ -173,14 +161,14 @@ const ProjectsComp = ({ createNotification }) => {
                                 style={{ marginTop: "10px" }}
                             />
 
-                            <div style={{ display: "flex", justifyContent: "space-around", marginTop: "10px" }}>
+                            <div className="project-actions">
                                 {/* Completar proyecto */}
                                 <Button
                                     onClick={() => completeProject(project.id)}
                                     type="primary"
                                     icon={<CheckOutlined />}
                                     aria-label={`Mark ${project.name} as completed`}
-                                    style={{ flex: 1, marginRight: "8px" }}
+                                    className="project-action-button"
                                 >
                                     {t("Complete")} {/* Usar traducción */}
                                 </Button>
@@ -190,7 +178,7 @@ const ProjectsComp = ({ createNotification }) => {
                                     onClick={() => editProject(project.id)}
                                     icon={<EditOutlined />}
                                     aria-label={`Edit ${project.name}`}
-                                    style={{ flex: 1, marginRight: "8px" }}
+                                    className="project-action-button"
                                 >
                                     {t("Edit")} {/* Usar traducción */}
                                 </Button>
@@ -201,7 +189,7 @@ const ProjectsComp = ({ createNotification }) => {
                                     icon={<DeleteOutlined />}
                                     danger
                                     aria-label={`Delete ${project.name}`}
-                                    style={{ flex: 1 }}
+                                    className="project-action-button"
                                 >
                                     {t("Delete")} {/* Usar traducción */}
                                 </Button>

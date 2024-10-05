@@ -3,8 +3,9 @@ import { backendUrl } from "../Globals";
 import { useNavigate } from "react-router-dom";
 import { Button, Card, List } from "antd";
 import { DeleteOutlined, EditOutlined, CheckOutlined } from "@ant-design/icons"; 
-import { formatDate } from "../Utils";
+import { convertDateTimeToReadableFormat } from "../Utils";
 import { useTranslation } from 'react-i18next'; // Importa el hook useTranslation
+import '../Css/ViewTasks.css'; 
 
 const TasksComp = ({ createNotification }) => {
     const { t } = useTranslation(); // Inicializa el hook de traducción
@@ -85,27 +86,22 @@ const TasksComp = ({ createNotification }) => {
     };
 
     return (
-        <div role="main" style={{ padding: "10px" }}>
-            {/* Accessible header */}
+        <div role="main" className="tasks-container">
+            {/* Encabezado accesible */}
             <Card
-                style={{
-                    textAlign: "center",
-                    fontSize: "24px",
-                    fontWeight: "bold",
-                    marginBottom: "20px",
-                    backgroundColor: "#f0f2f5",
-                }}
-                tabIndex={0} // Ensure keyboard navigation
+                className="tasks-header"
+                tabIndex={0} // Asegurar navegación por teclado
                 aria-label="Task List Header"
             >
                 {t("My Tasks")} {/* Usa la traducción */}
             </Card>
 
-            {/* Accessible error message */}
-            {messageText && <h3 aria-live="assertive" style={{ color: "red" }}>{messageText}</h3>}
+            {/* Mensaje de error accesible */}
+            {messageText && <h3 aria-live="assertive" className="error-message">{messageText}</h3>}
 
-            {/* Responsive task list */}
+            {/* Lista de tareas responsiva */}
             <List
+                className="task-list"
                 grid={{
                     gutter: 16,
                     xs: 1, sm: 1, md: 2, lg: 3, xl: 4, xxl: 4, 
@@ -117,35 +113,26 @@ const TasksComp = ({ createNotification }) => {
                             hoverable
                             title={task.title}
                             aria-label={`Task: ${task.title}`}
-                            style={{
-                                display: "flex",
-                                flexDirection: "column",
-                                justifyContent: "space-between",
-                                minHeight: "260px",
-                                padding: "16px",
-                                backgroundColor: "#ffffff",
-                                borderRadius: "8px",
-                                boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-                            }}
+                            className="task-card"
                         >
-                            {/* Description */}
-                            <p style={{ color: "#555", marginBottom: "10px" }}>
+                            {/* Descripción */}
+                            <p className="task-description">
                                 <strong>{t("Description:")}</strong> {task.description} {/* Usa la traducción */}
                             </p>
 
-                            {/* Due date */}
-                            <p style={{ fontWeight: "bold", color: "#888" }}>
-                                <strong>{t("Due Date:")}</strong> {formatDate(task.dateFinish)} {/* Usa la traducción */}
+                            {/* Fecha de vencimiento */}
+                            <p className="due-date">
+                                <strong>{t("Due Date:")}</strong> {convertDateTimeToReadableFormat(task.dateFinish)} {/* Usa la traducción */}
                             </p>
 
-                            {/* Action buttons */}
-                            <div style={{ display: "flex", justifyContent: "space-around", marginTop: "10px" }}>
+                            {/* Botones de acción */}
+                            <div className="task-actions">
                                 <Button
                                     onClick={() => completeTask(task.id)}
                                     type="primary"
                                     icon={<CheckOutlined />}
                                     aria-label={`Mark ${task.title} as completed`}
-                                    style={{ flex: 1, marginRight: "8px" }}
+                                    className="task-action-button"
                                 >
                                     {t("Complete")} {/* Usa la traducción */}
                                 </Button>
@@ -153,7 +140,7 @@ const TasksComp = ({ createNotification }) => {
                                     onClick={() => moveToEditTask(task.id)}
                                     icon={<EditOutlined />}
                                     aria-label={`Edit ${task.title}`}
-                                    style={{ flex: 1, marginRight: "8px" }}
+                                    className="task-action-button"
                                 >
                                     {t("Edit")} {/* Usa la traducción */}
                                 </Button>
@@ -162,7 +149,7 @@ const TasksComp = ({ createNotification }) => {
                                     icon={<DeleteOutlined />}
                                     danger
                                     aria-label={`Delete ${task.title}`}
-                                    style={{ flex: 1 }}
+                                    className="task-action-button"
                                 >
                                     {t("Delete")} {/* Usa la traducción */}
                                 </Button>
@@ -175,4 +162,4 @@ const TasksComp = ({ createNotification }) => {
     );
 };
 
-export default React.memo(TasksComp); // Memoization to prevent unnecessary re-renders
+export default React.memo(TasksComp);

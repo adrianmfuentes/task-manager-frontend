@@ -50,6 +50,9 @@ i18n
           "Task marked as completed": "Task marked as completed",
           "Failed to delete task. Please try again.": "Failed to delete task. Please try again.",
           "Failed to mark task as completed. Please try again.": "Failed to mark task as completed. Please try again.",
+          "Welcome to TaskMaster!": "Welcome to TaskMaster!",
+          "Simplify project and task management with TaskMaster.": "Simplify project and task management with TaskMaster.",
+          "Create your account or log in now to start organizing your life efficiently and productively.": "Create your account or log in now to start organizing your life efficiently and productively.",
         }
       },
       es: {
@@ -97,6 +100,9 @@ i18n
           "Task marked as completed": "Tarea marcada como completada",
           "Failed to delete task. Please try again.": "Error al eliminar la tarea. Por favor, inténtalo de nuevo.",
           "Failed to mark task as completed. Please try again.": "Error al marcar la tarea como completada. Por favor, inténtalo de nuevo.",
+          "Welcome to TaskMaster!": "¡Bienvenido a TaskMaster!",
+          "Simplify project and task management with TaskMaster.": "Simplifica la gestión de proyectos y tareas con TaskMaster.",
+          "Create your account or log in now to start organizing your life efficiently and productively.": "Crea tu cuenta o inicia sesión ahora para comenzar a organizar tu vida de forma eficiente y productiva.",
         }
       },
       fr: {
@@ -144,6 +150,9 @@ i18n
           "Task marked as completed": "Tâche marquée comme terminée",
           "Failed to delete task. Please try again.": "Échec de la suppression de la tâche. Veuillez réessayer.",
           "Failed to mark task as completed. Please try again.": "Échec de la marque de la tâche comme terminée. Veuillez réessayer.",
+          "Welcome to TaskMaster!": "Bienvenue à TaskMaster!",
+          "Simplify project and task management with TaskMaster.": "Simplifiez la gestion de projets et de tâches avec TaskMaster.",
+          "Create your account or log in now to start organizing your life efficiently and productively.": "Créez votre compte ou connectez-vous maintenant pour commencer à organiser votre vie de manière efficace et productive.",
         }
       },
       de: {
@@ -191,6 +200,9 @@ i18n
           "Task marked as completed": "Aufgabe als abgeschlossen markiert",
           "Failed to delete task. Please try again.": "Fehler beim Löschen der Aufgabe. Bitte versuchen Sie es erneut.",
           "Failed to mark task as completed. Please try again.": "Fehler beim Markieren der Aufgabe als abgeschlossen. Bitte versuchen Sie es erneut.",
+          "Welcome to TaskMaster!": "Willkommen bei TaskMaster!",
+          "Simplify project and task management with TaskMaster.": "Vereinfachen Sie das Projekt- und Aufgabenmanagement mit TaskMaster.",
+          "Create your account or log in now to start organizing your life efficiently and productively.": "Erstellen Sie Ihr Konto oder melden Sie sich jetzt an, um Ihr Leben effizient und produktiv zu organisieren.",
         }
       },
       it: {
@@ -238,6 +250,9 @@ i18n
           "Task marked as completed": "Attività contrassegnata come completata",
           "Failed to delete task. Please try again.": "Impossibile eliminare l'attività. Per favore, riprova.",
           "Failed to mark task as completed. Please try again.": "Impossibile contrassegnare l'attività come completata. Per favore, riprova.",
+          "Welcome to TaskMaster!": "Benvenuto in TaskMaster!",
+          "Simplify project and task management with TaskMaster.": "Semplifica la gestione di progetti e attività con TaskMaster.",
+          "Create your account or log in now to start organizing your life efficiently and productively.": "Crea il tuo account o accedi ora per iniziare a organizzare la tua vita in modo efficiente e produttivo.",
         }
       },
       pl: {
@@ -285,6 +300,9 @@ i18n
           "Task marked as completed": "Zadanie oznaczone jako zakończone",
           "Failed to delete task. Please try again.": "Nie udało się usunąć zadania. Spróbuj ponownie.",
           "Failed to mark task as completed. Please try again.": "Nie udało się oznaczyć zadania jako zakończone. Spróbuj ponownie.",
+          "Welcome to TaskMaster!": "Witaj w TaskMaster!",
+          "Simplify project and task management with TaskMaster.": "Uprość zarządzanie projektami i zadaniami z TaskMaster.",
+          "Create your account or log in now to start organizing your life efficiently and productively.": "Utwórz swoje konto lub zaloguj się teraz, aby zacząć efektywnie i produktywnie organizować swoje życie.",
         }
       },
       ru: {
@@ -332,6 +350,9 @@ i18n
           "Task marked as completed": "Задача помечена как завершенная",
           "Failed to delete task. Please try again.": "Не удалось удалить задачу. Пожалуйста, попробуйте снова.",
           "Failed to mark task as completed. Please try again.": "Не удалось пометить задачу как завершенную. Пожалуйста, попробуйте снова.",
+          "Welcome to TaskMaster!": "Добро пожаловать в TaskMaster!",
+          "Simplify project and task management with TaskMaster.": "Упростите управление проектами и задачами с помощью TaskMaster.",
+          "Create your account or log in now to start organizing your life efficiently and productively.": "Создайте свою учетную запись или войдите в систему, чтобы начать эффективно и продуктивно организовывать свою жизнь.",
         }
       },
       zh: {
@@ -379,6 +400,9 @@ i18n
           "Task marked as completed": "任务已完成",
           "Failed to delete task. Please try again.": "删除任务失败。请重试。",
           "Failed to mark task as completed. Please try again.": "标记任务为完成失败。请重试。",
+          "Welcome to TaskMaster!": "欢迎来到 TaskMaster！",
+          "Simplify project and task management with TaskMaster.": "使用 TaskMaster 简化项目和任务管理。",
+          "Create your account or log in now to start organizing your life efficiently and productively.": "创建您的帐户或立即登录以开始高效和富有成效地组织您的生活。",
         }
       },
       hi: {
@@ -426,6 +450,9 @@ i18n
           "Task marked as completed": "कार्य को पूरा किया गया",
           "Failed to delete task. Please try again.": "कार्य को हटाने में विफल। कृपया पुनः प्रयास करें।",
           "Failed to mark task as completed. Please try again.": "कार्य को पूरा करने के लिए चिह्नित करने में विफल। कृपया पुनः प्रयास करें।",
+          "Welcome to TaskMaster!": "TaskMaster में आपका स्वागत है!",
+          "Simplify project and task management with TaskMaster.": "TaskMaster के साथ परियोजना और कार्य प्रबंधन को सरल बनाएं।",
+          "Create your account or log in now to start organizing your life efficiently and productively.": "अपना खाता बनाएं या तुरंत लॉगिन करें ताकि आप अपने जीवन को कुशलतापूर्वक और उत्पादकता से व्यवस्थित कर सकें।",
         }
       },
       ar: {
@@ -473,6 +500,9 @@ i18n
           "Task marked as completed": "تم وضع علامة على المهمة كمكتملة",
           "Failed to delete task. Please try again.": "فشل في حذف المهمة. يرجى المحاولة مرة أخرى.",
           "Failed to mark task as completed. Please try again.": "فشل في وضع علامة على المهمة كمكتملة. يرجى المحاولة مرة أخرى.",
+          "Welcome to TaskMaster!": "مرحبًا بكم في TaskMaster!",
+          "Simplify project and task management with TaskMaster.": "بسّط إدارة المشاريع والمهام مع TaskMaster.",
+          "Create your account or log in now to start organizing your life efficiently and productively.": "قم بإنشاء حسابك أو تسجيل الدخول الآن لبدء تنظيم حياتك بكفاءة وإنتاجية.",        
         }
       },
       kg: {
@@ -520,6 +550,9 @@ i18n
           "Task marked as completed": "Kintwadi yasàkamini ke kavala",
           "Failed to delete task. Please try again.": "Tìmèdi ve kufutuka kintwadi. Sambila futuka mbòtama.",
           "Failed to mark task as completed. Please try again.": "Tìmèdi ve kusàka kintwadi ke kavala. Sambila nzingila mbòtama.",
+          "Welcome to TaskMaster!": "Mwakire mu TaskMaster!",
+          "Simplify project and task management with TaskMaster.": "Fungura ugucunga imishinga n'ibikorwa na TaskMaster.",
+          "Create your account or log in now to start organizing your life efficiently and productively.": "Sakaza konti yawe cyangwa winjire none kugira ngo utangire gutegura ubuzima bwawe neza kandi ku buryo bwiza.",        
         }
       },
     },
@@ -528,6 +561,7 @@ i18n
     interpolation: {
       escapeValue: false, // Leaving it to React
     }
-  });
+  }
+);
 
 export default i18n;

@@ -1,6 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Menu } from 'antd';
+import '../Css/LanguageSelector.css'; 
 
 const LanguageSelector = () => {
     const { i18n } = useTranslation();
@@ -10,7 +11,7 @@ const LanguageSelector = () => {
     };
 
     return (
-        <Menu>
+        <Menu className="language-selector">
             <Menu.Item onClick={() => changeLanguage('en')}> English </Menu.Item>
             <Menu.Item onClick={() => changeLanguage('es')}> Español </Menu.Item>
             <Menu.Item onClick={() => changeLanguage('fr')}> Français </Menu.Item>

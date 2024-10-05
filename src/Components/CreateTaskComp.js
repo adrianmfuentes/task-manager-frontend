@@ -3,6 +3,8 @@ import { backendUrl } from "../Globals";
 import { useNavigate } from "react-router-dom";
 import { Alert, Button, Card, Col, DatePicker, Input, Row, Select, Typography } from "antd";
 import { useTranslation } from 'react-i18next';
+import '../Css/CreateTask.css'; 
+import { formatTimestamp } from "../Utils";
 
 const { Option } = Select;
 const { Text } = Typography;
@@ -67,7 +69,7 @@ const CreateTaskComp = ({ createNotification }) => {
     const changeDate = (date) => { 
         setTask((prevTask) => ({
             ...prevTask,
-            dateFinish: date ? date.valueOf() : null // Store as timestamp
+            dateFinish: date ? formatTimestamp(date.valueOf()) : null // Store as formatted date
         }));
         setTouched((prevTouched) => ({ ...prevTouched, dateFinish: true }));
     };
@@ -101,71 +103,67 @@ const CreateTaskComp = ({ createNotification }) => {
     const isButtonDisabled = !task.title || !task.dateFinish || Object.keys(error).length > 0;
 
     return (
-        <Row align="middle" justify="center" style={{ minHeight: "70vh", padding: "10px" }}>
-            {/* Display feedback message for errors or success */}
+        <Row align="middle" justify="center" className="row-container"> {/* Usa la clase de CSS */}
             {message && <Alert type="error" message={message} style={{ marginBottom: "10px" }} />}
 
             <Col xs={24} sm={20} md={16} lg={12}>
-                <Card title={t("createTask")} bordered={false}>
-
-                    {/* Task Title Input */}
+                <Card title={t("Create Task")} bordered={false} className="task-card"> {/* Clase para el card */}
                     <Input
                         size="large"
                         placeholder={t("taskTitle")}
                         aria-label={t("taskTitle")}
                         value={task.title}
                         onChange={(e) => changeProperty("title", e.target.value)}
-                        required // Mark as required for accessibility
+                        required
+                        className="input-field" // Clase para el input
                     />
-                    {error.name && <Text type="danger">{error.name}</Text>}
+                    {error.name && <Text type="danger" className="error-message">{error.name}</Text>} {/* Error title */}
 
-                    {/* Task Description Input */}
                     <Input.TextArea
-                        style={{ marginTop: "10px" }}
                         size="large"
                         placeholder={t("taskDescription")}
                         aria-label={t("taskDescription")}
                         value={task.description}
                         onChange={(e) => changeProperty("description", e.target.value)}
-                        required // Mark as required for accessibility
+                        required
+                        className="input-field" // Clase para el input
                     />
-                    {error.description && <Text type="danger">{error.description}</Text>}
+                    {error.description && <Text type="danger" className="error-message">{error.description}</Text>} {/* Error description */}
 
-                    {/* Task Priority Select */}
                     <Select
-                        style={{ marginTop: "10px", width: "100%" }}
+                        style={{ width: "100%" }}
                         size="large"
                         placeholder={t("selectPriority")}
                         aria-label={t("taskPriority")}
                         value={task.priority}
                         onChange={(value) => changeProperty("priority", value)}
+                        className="input-field" // Clase para el select
                     >
                         <Option value="low">{t("low")}</Option>
                         <Option value="medium">{t("medium")}</Option>
                         <Option value="high">{t("high")}</Option>
                     </Select>
 
-                    {/* Due Date Picker */}
                     <DatePicker
-                        style={{ marginTop: "10px", width: "100%" }}
+                        style={{ width: "100%" }}
                         size="large"
                         showTime
                         placeholder={t("selectDueDate")}
                         onChange={changeDate}
                         aria-label={t("taskDueDate")}
+                        className="input-field" // Clase para el datepicker
                     />
-                    {error.dateFinish && <Text type="danger">{error.dateFinish}</Text>}
+                    {error.dateFinish && <Text type="danger" className="error-message">{error.dateFinish}</Text>} {/* Error date */}
 
-                    {/* Create Task Button */}
                     <Button
-                        style={{ marginTop: "10px" }}
                         type="primary"
                         aria-label={t("createTask")}
                         onClick={clickCreate}
                         block
                         disabled={isButtonDisabled}
+                        className="primary-button" // Clase para el botón principal
                     >
-                        {t("createTask")}
+                        {t("Create task")}
                     </Button>
                 </Card>
             </Col>

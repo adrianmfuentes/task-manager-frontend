@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { emailPattern } from "../Utils";
 import { Button, Card, Col, Input, Row, Typography, Alert } from "antd";
 import { useTranslation } from "react-i18next";
+import '../Css/CreateUser.css'; 
 
 const CreateUserComp = (props) => {
   const { t } = useTranslation();
@@ -68,13 +69,11 @@ const CreateUserComp = (props) => {
   const { Text } = Typography;
 
   return (
-    <Row align="middle" justify="center" style={{ minHeight: "70vh", padding: "10px" }}>
+    <Row align="middle" justify="center" className="row-container"> {/* Usa la clase de CSS */}
       {message && <Alert type="error" message={message} style={{ marginBottom: "10px" }} />}
 
       <Col>
-        <Card title={t("registerUser")} style={{ minWidth: "300px", maxWidth: "500px" }}>
-
-          {/* Email of the user */}
+        <Card title={t("Register")} className="user-card"> {/* Clase para el card */}
           <Input
             size="large"
             type="text"
@@ -83,12 +82,11 @@ const CreateUserComp = (props) => {
             onChange={changeEmail}
             aria-label={t("emailPlaceholder")}
             required
+            className="input-field" // Clase para el input de email
           />
-          {error.email && <Text type="danger">{error.email}</Text>}
+          {error.email && <Text type="danger" className="error-message">{error.email}</Text>} {/* Error email */}
 
-          {/* Password of the user */}
           <Input
-            style={{ marginTop: "10px" }}
             size="large"
             type="password"
             placeholder={t("passwordPlaceholder")}
@@ -96,18 +94,18 @@ const CreateUserComp = (props) => {
             onChange={changePassword}
             aria-label={t("passwordPlaceholder")}
             required
+            className="input-field" // Clase para el input de password
           />
-          {error.password && <Text type="danger">{error.password}</Text>}
+          {error.password && <Text type="danger" className="error-message">{error.password}</Text>} {/* Error password */}
 
-          {/* Button to create a user */}
           <Button
-            style={{ marginTop: "10px" }}
             type="primary"
             onClick={clickCreate}
             block
             disabled={Object.keys(error).length > 0} // Disable if there are validation errors
+            className="primary-button" // Clase para el botón principal
           >
-            {t("registerUser")}
+            {t("Register")}
           </Button>
         </Card>
       </Col>
