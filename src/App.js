@@ -19,6 +19,7 @@ import Contact from './Footer/Contact';
 import LanguageSelector from './Components/LanguageSelector';
 import { useTranslation } from 'react-i18next'; // Importa useTranslation
 import { backendUrl } from './Globals';
+import LandingPage from './Components/LandingPage';
 
 const CreateTaskComp = React.lazy(() => import('./Components/CreateTaskComp'));
 
@@ -99,7 +100,8 @@ function App() {
         <Content style={{ padding: "20px 50px" }}>
           <Suspense fallback={<div>Loading...</div>}>
             <Routes>
-              <Route path="/" element={<p>{t("Website Index (under construction)")}</p>} />
+              <Route path="/" element={<LandingPage />} /> 
+              {/*<Route path="/" element={<p>{t("Website Index (under construction)")}</p>} />*/}
               <Route path="/register" element={<CreateUserComp createNotification={createNotif} />} />
               <Route path="/login" element={<LoginUserComp setLogin={setLogin} createNotification={createNotif} />} />
               <Route path="/myTasks" element={<ViewTasksComp createNotification={createNotif} />} />
