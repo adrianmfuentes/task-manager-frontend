@@ -6,6 +6,10 @@ body {
   background-color: #f2f2f2; /* Light grey background */
 }
 
+.layout {
+  min-height: '100vh';
+}
+
 /* Main container for content */
 .main-container {
   max-width: 800px; /* Maximum width for content */

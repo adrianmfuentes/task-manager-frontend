@@ -86,7 +86,7 @@ function App() {
   return (
     <>
       {contextHolder}
-      <Layout className='layout' style={{ minHeight: '100vh' }}>
+      <Layout className='layout'>
         <Header className="navigation-header"> {/* Aplica clase CSS a Header */}
           <div className="navigation-menu"> {/* Contenedor de menú */}
             <Dropdown overlay={menu} trigger={['click']} placement="bottomLeft">
