@@ -1,8 +1,9 @@
 import React from 'react';
+import './css/Contact.css'; 
 
 const Contact = () => {
     return (
-        <div style={{ padding: '20px' }}>
+        <div className="contact-container">
             <h1>Contact Us</h1>
             <p>
                 We would love to hear from you! Please reach out with any questions or feedback.
@@ -18,14 +19,14 @@ const Contact = () => {
             <h2>Follow Us</h2>
             <p>
                 Follow us on social media for updates:
-                <ul>
-                    <li><a href="https://twitter.com/example">Twitter</a></li>
-                    <li><a href="https://facebook.com/example">Facebook</a></li>
-                    <li><a href="https://instagram.com/example">Instagram</a></li>
-                </ul>
             </p>
+            <ul className="social-links">
+                <li><a href="https://twitter.com/example">Twitter</a></li>
+                <li><a href="https://facebook.com/example">Facebook</a></li>
+                <li><a href="https://instagram.com/example">Instagram</a></li>
+            </ul>
         </div>
     );
 };
 
-export default Contact;
+export default React.memo(Contact);

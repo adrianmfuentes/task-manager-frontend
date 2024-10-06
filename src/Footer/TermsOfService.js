@@ -1,8 +1,9 @@
 import React from 'react';
+import './css/TermsOfService.css'; 
 
 const TermsOfService = () => {
     return (
-        <div style={{ padding: '20px' }}>
+        <div className="terms-of-service-container">
             <h1>Terms of Service</h1>
             <p>
                 Welcome to our To Do List website. By using our services, you agree to comply with and be bound by the following terms.
@@ -31,4 +32,4 @@ const TermsOfService = () => {
     );
 };
 
-export default TermsOfService;
+export default React.memo(TermsOfService);

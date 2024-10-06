@@ -1,4 +1,3 @@
-// Components/LandingPage.js
 import React from 'react';
 import { Button, Typography } from 'antd';
 import { Link } from 'react-router-dom';
@@ -17,14 +16,31 @@ const LandingPage = () => {
         <Text className="landing-text">
           {t("Simplify project and task management with TaskMaster.")}<br />
           {t("Create your account or log in now to start organizing your life efficiently and productively.")}
-        </Text><br></br><br></br>
-        
+        </Text>
+        <br /><br />
+
+        {/* Contenedor de botones */}
         <div className="landing-buttons">
+          {/* Botón de registro */}
           <Link to="/register">
-            <Button type="primary" size="large" className="landing-button">{t("Register")}</Button>
+            <Button 
+              type="primary" 
+              size="large" 
+              className="landing-button" // Clase para botones responsivos
+            >
+              {t("Register")}
+            </Button>
           </Link>
+
+          {/* Botón de inicio de sesión */}
           <Link to="/login">
-            <Button type="default" size="large" className="landing-button">{t("Login")}</Button>
+            <Button 
+              type="default" 
+              size="large" 
+              className="landing-button" // Clase para botones responsivos
+            >
+              {t("Login")}
+            </Button>
           </Link>
         </div>
       </div>

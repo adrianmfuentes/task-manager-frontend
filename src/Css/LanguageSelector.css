@@ -3,6 +3,7 @@
 /* Estilo para el contenedor del menú de selección de idiomas */
 .language-selector {
     width: 200px; /* Ancho del menú */
+    max-width: 100%; /* Asegura que no exceda el ancho del contenedor padre */
     border: 1px solid #d9d9d9; /* Borde del menú */
     border-radius: 4px; /* Esquinas redondeadas */
     box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1); /* Sombra sutil */
@@ -25,5 +26,22 @@
 @media (max-width: 768px) {
     .language-selector {
         width: 100%; /* Ancho completo en móviles */
+        border-radius: 0; /* Bordes rectos en móviles */
+    }
+    
+    .language-selector .ant-menu-item {
+        font-size: 16px; /* Aumentar el tamaño del texto para mejor legibilidad */
+        padding: 10px; /* Mayor espacio alrededor del texto */
+    }
+}
+
+/* Media Query para pantallas más pequeñas */
+@media (max-width: 480px) {
+    .language-selector {
+        font-size: 14px; /* Disminuir el tamaño del texto en pantallas pequeñas */
+    }
+
+    .language-selector .ant-menu-item {
+        padding: 8px; /* Reducir el espaciado en pantallas pequeñas */
     }
 }

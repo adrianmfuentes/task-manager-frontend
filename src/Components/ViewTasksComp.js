@@ -9,11 +9,11 @@ import '../Css/ViewTasks.css';
 
 const TasksComp = ({ createNotification }) => {
     const { t } = useTranslation(); // Inicializa el hook de traducción
-    const [tasks, setTasks] = useState([]); // State to hold tasks
-    const [messageText, setMessageText] = useState(""); // State for error messages
-    const navigate = useNavigate(); // Hook for navigation
+    const [tasks, setTasks] = useState([]); // Estado para almacenar las tareas
+    const [messageText, setMessageText] = useState(""); // Estado para mensajes de error
+    const navigate = useNavigate(); // Hook para navegación
 
-    // Fetch tasks from backend
+    // Obtener tareas del backend
     const getItems = useCallback(async () => {
         try {
             const response = await fetch(`${backendUrl}/tasks?apiKey=${localStorage.getItem("apiKey")}`);
@@ -24,7 +24,7 @@ const TasksComp = ({ createNotification }) => {
 
             if (response.ok) {
                 const jsonData = await response.json();
-                setTasks(jsonData); // Update tasks state
+                setTasks(jsonData); // Actualizar el estado con las tareas
             } else {
                 const jsonData = await response.json();
                 setMessageText(jsonData.error);
@@ -35,15 +35,15 @@ const TasksComp = ({ createNotification }) => {
     }, [navigate, t]);
 
     useEffect(() => {
-        getItems(); // Fetch tasks on component mount
+        getItems(); // Obtener las tareas cuando se monta el componente
     }, [getItems]);
 
-    // Navigate to edit task page
+    // Navegar a la página de edición de tareas
     const moveToEditTask = (id) => {
         navigate(`/task/edit/${id}`);
     };
 
-    // Delete task
+    // Eliminar tarea
     const deleteTask = async (id) => {
         try {
             const res = await fetch(`${backendUrl}/tasks/${id}?apiKey=${localStorage.getItem("apiKey")}`, {
@@ -64,7 +64,7 @@ const TasksComp = ({ createNotification }) => {
         }
     };
 
-    // Complete task
+    // Completar tarea
     const completeTask = async (id) => {
         try {
             const res = await fetch(`${backendUrl}/tasks/${id}?apiKey=${localStorage.getItem("apiKey")}`, {
@@ -75,7 +75,7 @@ const TasksComp = ({ createNotification }) => {
 
             if (res.ok) {
                 createNotification("success", t("Task marked as completed")); // Usa la traducción
-                getItems(); // Refresh tasks list
+                getItems(); // Refrescar lista de tareas
             } else {
                 const jsonData = await res.json();
                 setMessageText(jsonData.error);

@@ -1,8 +1,9 @@
 import React from 'react';
+import './css/PrivacyPolicy.css'; 
 
 const PrivacyPolicy = () => {
     return (
-        <div style={{ padding: '20px' }}>
+        <div className="privacy-policy-container">
             <h1>Privacy Policy</h1>
             <p>
                 Your privacy is important to us. This privacy policy explains how we collect, use, and protect your information.
@@ -31,4 +32,4 @@ const PrivacyPolicy = () => {
     );
 };
 
-export default PrivacyPolicy;
+export default React.memo(PrivacyPolicy);

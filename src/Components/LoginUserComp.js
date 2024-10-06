@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import { backendUrl } from "../Globals";
 import { useNavigate } from "react-router-dom";
@@ -10,52 +9,44 @@ import '../Css/LoginUser.css';
 const LoginUserComp = ({ setLogin, createNotification }) => {
     const { t } = useTranslation(); // Usar el hook para obtener traducciones
 
-    // State declarations
     const [email, setEmail] = useState(""); // Email input state
     const [password, setPassword] = useState(""); // Password input state
     const [, setMessage] = useState(""); // State to display error messages
     const [, setError] = useState({}); // State to track validation errors
 
-    const navigate = useNavigate(); // Hook for navigation in the app
+    const navigate = useNavigate(); // Hook para la navegación
 
-    // Effect hook to check for input errors and handle keydown events
     useEffect(() => {
-        checkInputErrors(); // Validate inputs on change
+        checkInputErrors();
 
-        // Function to handle Enter key for login
         const handleKeyDown = (event) => {
             if (event.key === "Enter") {
-                handleLoginClick(); // Trigger login on Enter
+                handleLoginClick();
             }
         };
 
-        // Attach event listener for keydown
         window.addEventListener("keydown", handleKeyDown);
 
-        // Clean up the event listener on component unmount
         return () => {
             window.removeEventListener("keydown", handleKeyDown);
         };
-    }, [email, password]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [email, password,]);
 
-    // Validate input fields
     const checkInputErrors = () => {
         let updatedErrors = {};
 
-        // Validate email format
         if (!email || email.length < 3 || !emailPattern.test(email)) {
-            updatedErrors.email = t("incorrectEmailFormat"); // Usar traducción
+            updatedErrors.email = t("incorrectEmailFormat"); 
         }
 
-        // Validate password length
         if (!password || password.length < 5) {
-            updatedErrors.password = t("passwordTooShort"); // Usar traducción
+            updatedErrors.password = t("passwordTooShort"); 
         }
 
-        setError(updatedErrors); // Update error state
+        setError(updatedErrors);
     };
 
-    // Handlers for input changes
     const handleEmailChange = (e) => {
         setEmail(e.target.value);
     };
@@ -64,7 +55,6 @@ const LoginUserComp = ({ setLogin, createNotification }) => {
         setPassword(e.target.value);
     };
 
-    // Handler for login button click event
     const handleLoginClick = async () => {
         const res = await fetch(`${backendUrl}/users/login`, {
             method: "POST",
@@ -72,20 +62,17 @@ const LoginUserComp = ({ setLogin, createNotification }) => {
             body: JSON.stringify({ email, password }),
         });
 
-        // Handle API response
         if (res.ok) {
             const jsonData = await res.json();
             if (jsonData.apiKey) {
-                // Store user credentials in localStorage
                 localStorage.setItem("apiKey", jsonData.apiKey);
                 localStorage.setItem("userId", jsonData.id);
                 localStorage.setItem("email", jsonData.email);
             }
 
-            setLogin(true); // Update login state
-            navigate("/myTasks"); // Redirect to tasks page
+            setLogin(true); 
+            navigate("/myTasks"); 
         } else {
-            // Handle login failure
             const jsonData = await res.json();
             setMessage(jsonData.error);
             createNotification(jsonData.error);
@@ -94,30 +81,30 @@ const LoginUserComp = ({ setLogin, createNotification }) => {
 
     return (
         <Row align="middle" justify="center" className="login-user-container">
-            <Col>
+            <Col xs={24} sm={20} md={16} lg={10} xl={8}> 
                 <Card title={t("Login")} className="login-card">
                     <Input
                         className="login-input"
                         size="large"
                         type="text"
                         placeholder={t("emailPlaceholder")}
-                        onChange={handleEmailChange} // Update email state on input change
+                        onChange={handleEmailChange} 
                     />
                     <Input
                         className="login-input"
                         size="large"
-                        type="password" // Set input type to password for security
+                        type="password" 
                         placeholder={t("passwordPlaceholder")}
-                        onChange={handlePasswordChange} // Update password state on input change
+                        onChange={handlePasswordChange} 
                     />
                     <Button
                         className="login-button"
                         type="primary"
-                        onClick={handleLoginClick} // Trigger login handler on button click
+                        onClick={handleLoginClick} 
                         block
-                        disabled={!email || !password} // Disable button if fields are empty
+                        disabled={!email || !password} 
                     >
-                        {t("Login")} {/* Usar traducción para el botón */}
+                        {t("Login")} 
                     </Button>
                 </Card>
             </Col>

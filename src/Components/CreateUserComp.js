@@ -38,6 +38,7 @@ const CreateUserComp = (props) => {
   // Validate inputs on email or password change
   useEffect(() => {
     validateInputs(email, password);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [email, password]);
 
   // Handle user creation on button click
@@ -69,10 +70,10 @@ const CreateUserComp = (props) => {
   const { Text } = Typography;
 
   return (
-    <Row align="middle" justify="center" className="row-container"> {/* Usa la clase de CSS */}
+    <Row align="middle" justify="center" className="row-container"> {/* Clase de CSS */}
       {message && <Alert type="error" message={message} style={{ marginBottom: "10px" }} />}
 
-      <Col>
+      <Col xs={24} sm={20} md={16} lg={12}>
         <Card title={t("Register")} className="user-card"> {/* Clase para el card */}
           <Input
             size="large"

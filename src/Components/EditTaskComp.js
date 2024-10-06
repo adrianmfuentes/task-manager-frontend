@@ -3,8 +3,8 @@ import React, { useEffect, useState, useCallback } from "react";
 import { backendUrl } from "../Globals";
 import { Alert, Button, Card, Col, DatePicker, Input, Row, Select, Typography } from "antd";
 import { useNavigate, useParams } from "react-router-dom";
-import { useTranslation } from "react-i18next"; // Import useTranslation hook
-import '../Css/EditTask.css'; 
+import { useTranslation } from "react-i18next";
+import '../Css/EditTask.css';
 
 const { Option } = Select;
 const { Text } = Typography;
@@ -12,15 +12,13 @@ const { Text } = Typography;
 const EditTaskComp = ({ createNotification }) => {
     const { taskId } = useParams();
     const navigate = useNavigate();
-    const { t } = useTranslation(); // Use translation hook
+    const { t } = useTranslation();
 
-    // State variables for task data, messages, errors, and touched fields
     const [task, setTask] = useState({ title: "", description: "", priority: "medium", dateFinish: null });
     const [message, setMessage] = useState("");
     const [error, setError] = useState({});
     const [touched, setTouched] = useState({});
 
-    // Fetch task details based on taskId
     const fetchTask = useCallback(async () => {
         try {
             const response = await fetch(`${backendUrl}/tasks/${taskId}?apiKey=${localStorage.getItem("apiKey")}`);
@@ -33,10 +31,10 @@ const EditTaskComp = ({ createNotification }) => {
                     dateFinish: data.dateFinish ? dayjs(data.dateFinish) : null,
                 });
             } else {
-                setMessage(t("errorFetchingTask")); // Update to use translation
+                setMessage(t("errorFetchingTask"));
             }
         } catch {
-            setMessage(t("failedToFetchTaskData")); // Update to use translation
+            setMessage(t("failedToFetchTaskData"));
         }
     }, [taskId, t]);
 
@@ -44,17 +42,16 @@ const EditTaskComp = ({ createNotification }) => {
         fetchTask();
     }, [fetchTask]);
 
-    // Validate input fields
     const checkInputErrors = useCallback(() => {
         const updatedErrors = {};
         if (touched.title && (!task.title || task.title.length < 2)) {
-            updatedErrors.title = t("taskErrorTitle"); // Actualiza para usar traducción
+            updatedErrors.title = t("taskErrorTitle");
         }
         if (touched.description && (!task.description || task.description.length < 5)) {
-            updatedErrors.description = t("taskErrorDescription"); // Actualiza para usar traducción
+            updatedErrors.description = t("taskErrorDescription");
         }
         if (touched.dateFinish && task.dateFinish && task.dateFinish.isBefore(dayjs())) {
-            updatedErrors.dateFinish = t("taskErrorDateFinish"); // Actualiza para usar traducción
+            updatedErrors.dateFinish = t("taskErrorDateFinish");
         }
     
         setError(updatedErrors);
@@ -64,22 +61,19 @@ const EditTaskComp = ({ createNotification }) => {
         checkInputErrors();
     }, [task, checkInputErrors]);
 
-    // Update task property
     const changeProperty = (propertyName, value) => {
         setTask((prevTask) => ({ ...prevTask, [propertyName]: value }));
         setTouched((prevTouched) => ({ ...prevTouched, [propertyName]: true }));
     };
 
-    // Update finish date
     const changeDate = (date) => { 
         setTask((prevTask) => ({
             ...prevTask,
-            dateFinish: date ? dayjs(date) : null // Store as Day.js object
+            dateFinish: date ? dayjs(date) : null
         }));
         setTouched((prevTouched) => ({ ...prevTouched, dateFinish: true }));
     };
 
-    // Handle task update
     const clickEdit = async () => {
         if (Object.keys(error).length === 0) {
             try {
@@ -95,24 +89,24 @@ const EditTaskComp = ({ createNotification }) => {
                 });
 
                 if (res.ok) {
-                    createNotification("success", t("taskUpdatedSuccessfully")); // Update to use translation
+                    createNotification("success", t("taskUpdatedSuccessfully"));
                     navigate("/myTasks");
                 } else {
                     const jsonData = await res.json();
-                    setMessage(jsonData.error || t("failedToUpdateTask")); // Update to use translation
+                    setMessage(jsonData.error || t("failedToUpdateTask"));
                 }
             } catch {
-                setMessage(t("errorUpdatingTask")); // Update to use translation
+                setMessage(t("errorUpdatingTask"));
             }
         } else {
-            setMessage(t("fixErrorsMessage")); // Update to use translation
+            setMessage(t("fixErrorsMessage"));
         }
     };
 
     const isButtonDisabled = !task.title || !task.dateFinish || Object.keys(error).length > 0;
 
     return (
-        <Row align="middle" justify="center" className="edit-task-container" style={{ minHeight: "70vh" }}>
+        <Row align="middle" justify="center" className="edit-task-container">
             {message && <Alert type="error" message={message} className="alert-message" />}
 
             <Col xs={24} sm={20} md={16} lg={12}>
@@ -160,15 +154,13 @@ const EditTaskComp = ({ createNotification }) => {
                         style={{ marginTop: "10px", width: "100%" }}
                         size="large"
                         showTime
-                        value={task.dateFinish ? task.dateFinish : null}
+                        value={task.dateFinish}
                         onChange={changeDate}
                         aria-label="Due Date"
                         className="input-field"
                     />
                     {error.dateFinish && <Text type="danger" className="error-text">{error.dateFinish}</Text>}
 
-                    <br></br><br></br>
-                    
                     {/* Edit Task Button */}
                     <Button
                         className="edit-task-button"
@@ -177,7 +169,7 @@ const EditTaskComp = ({ createNotification }) => {
                         block
                         disabled={isButtonDisabled}
                     >
-                        {t("Edit task")} {/* Use translation for button label */}
+                        {t("Edit task")}
                     </Button>
                 </Card>
             </Col>

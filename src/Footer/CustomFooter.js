@@ -1,7 +1,7 @@
 import React from 'react';
 import { Layout } from 'antd';
-import { Link } from 'react-router-dom'; // Import Link for navigation
-import '../Css/Footer.css';
+import { Link } from 'react-router-dom'; // Importa Link para navegación
+import './css/Footer.css';
 
 const { Footer } = Layout;
 
@@ -9,7 +9,7 @@ const CustomFooter = () => {
     return (
         <Footer className="custom-footer">
             <div className="footer-content">
-                <span className="footer-text">To Do List Website ©2024</span>
+                <span className="footer-text">Task Master ©2024</span>
                 <nav className="footer-nav">
                     <Link to="/privacy" className="footer-link" aria-label="Privacy Policy">Privacy Policy</Link>
                     <Link to="/terms" className="footer-link" aria-label="Terms of Service">Terms of Service</Link>
@@ -20,4 +20,4 @@ const CustomFooter = () => {
     );
 };
 
-export default CustomFooter;
+export default React.memo(CustomFooter);

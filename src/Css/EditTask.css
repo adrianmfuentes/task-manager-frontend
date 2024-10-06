@@ -4,13 +4,7 @@
 .edit-task-container {
     background-color: #FAF3E0;
     padding: 20px; /* Espaciado interno */
-}
-
-/* Estilo para el título del formulario */
-.edit-task-title {
-    text-align: center; /* Centrar el texto */
-    font-size: 24px; /* Tamaño de fuente */
-    font-weight: bold; /* Negrita */
+    min-height: 70vh; /* Altura mínima */
 }
 
 /* Estilo para las alertas de error */
@@ -18,14 +12,10 @@
     margin-bottom: 10px; /* Espaciado inferior */
 }
 
-/* Estilo para el contenedor del formulario */
-.task-form {
-    margin-top: 20px; /* Espaciado superior */
-}
-
 /* Estilo para los campos de entrada */
 .input-field {
     margin-top: 10px; /* Espaciado superior */
+    width: 100%; /* Asegura que el campo ocupe todo el ancho disponible */
 }
 
 /* Estilo para los mensajes de error */
@@ -37,5 +27,16 @@
 /* Estilo para el botón de editar tarea */
 .edit-task-button {
     margin-top: 10px; /* Espaciado superior */
-    width: 100%; /* Ancho completo */
+    width: 100%; /* Asegura que el botón ocupe todo el ancho disponible */
+}
+
+/* Media queries para mejorar la responsividad */
+@media (max-width: 768px) {
+    .input-field {
+        font-size: 16px; /* Ajusta el tamaño de fuente de los campos */
+    }
+
+    .error-text {
+        font-size: 14px; /* Ajusta el tamaño de fuente de los mensajes de error */
+    }
 }

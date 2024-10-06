@@ -32,12 +32,16 @@ const ProjectsComp = ({ createNotification }) => {
         }
     }, [navigate, t]);
 
+    useEffect(() => {
+        getItems(); // Obtener proyectos al montar el componente
+    }, [getItems]);
+
     const markSubtaskComplete = async (subtaskId, projectId, currentSubtask) => {
         const updatedSubtask = {
             ...currentSubtask,
-            completed: !currentSubtask.completed // Alternar estado de completado
+            completed: !currentSubtask.completed
         };
-    
+
         try {
             const response = await fetch(`${backendUrl}/subtasks/${projectId}/subtasks/${subtaskId}`, {
                 method: 'PUT',
@@ -45,31 +49,25 @@ const ProjectsComp = ({ createNotification }) => {
                     "Content-Type": "application/json",
                     "apiKey": localStorage.getItem("apiKey")
                 },
-                body: JSON.stringify(updatedSubtask), // Enviar subtask actualizado
+                body: JSON.stringify(updatedSubtask),
             });
-    
+
             if (response.ok) {
-                message.success(t(`Subtask marked as ${updatedSubtask.completed ? 'completed' : 'incomplete'}`)); // Usar traducción
-                getItems(); // Refrescar la lista después de actualizar
+                message.success(t(`Subtask marked as ${updatedSubtask.completed ? 'completed' : 'incomplete'}`)); 
+                getItems();
             } else {
                 const jsonData = await response.json();
                 setMessageText(jsonData.error);
             }
         } catch (error) {
-            setMessageText(t("errorUpdatingProject")); // Usar traducción
+            setMessageText(t("errorUpdatingProject"));
         }
     };
-    
-    useEffect(() => {
-        getItems(); // Obtener proyectos al montar el componente
-    }, [getItems]);
 
-    // Navegar a la página de edición del proyecto
     const editProject = (id) => {
         navigate(`/project/edit/${id}`);
     };
 
-    // Eliminar proyecto
     const deleteProject = async (id) => {
         try {
             const res = await fetch(`${backendUrl}/projects/${id}?apiKey=${localStorage.getItem("apiKey")}`, {
@@ -79,18 +77,17 @@ const ProjectsComp = ({ createNotification }) => {
 
             if (res.ok) {
                 setProjects((prevProjects) => prevProjects.filter((project) => project.id !== id));
-                createNotification("success", t("Project deleted")); // Usar traducción
+                createNotification("success", t("Project deleted"));
                 setMessageText(""); 
             } else {
                 const jsonData = await res.json();
-                setMessageText(jsonData.error || t("Failed to delete project. Please try again.")); // Usar traducción
+                setMessageText(jsonData.error || t("Failed to delete project. Please try again."));
             }
         } catch (error) {
-            setMessageText(t("Failed to delete project. Please try again.")); // Usar traducción
+            setMessageText(t("Failed to delete project. Please try again."));
         }
     };
 
-    // Completar proyecto
     const completeProject = async (id) => {
         try {
             const res = await fetch(`${backendUrl}/projects/${id}?apiKey=${localStorage.getItem("apiKey")}`, {
@@ -100,25 +97,21 @@ const ProjectsComp = ({ createNotification }) => {
             });
 
             if (res.ok) {
-                createNotification("success", t("Project marked as completed")); // Usar traducción
-                getItems(); // Refrescar la lista de proyectos
+                createNotification("success", t("Project marked as completed"));
+                getItems();
             } else {
                 const jsonData = await res.json();
                 setMessageText(jsonData.error);
             }
         } catch (error) {
-            setMessageText(t("Failed to mark project as completed. Please try again.")); // Usar traducción
+            setMessageText(t("Failed to mark project as completed. Please try again."));
         }
     };
 
     return (
         <div role="main" className="projects-container">
-            <Card
-                className="projects-header"
-                tabIndex={0}
-                aria-label="Project List Header"
-            >
-                {t("My Projects")} {/* Usar traducción */}
+            <Card className="projects-header" tabIndex={0} aria-label="Project List Header">
+                {t("My Projects")}
             </Card>
 
             {messageText && <h3 aria-live="assertive" className="error-message">{messageText}</h3>}
@@ -136,10 +129,10 @@ const ProjectsComp = ({ createNotification }) => {
                             className="project-card"
                         >
                             <p className="project-description">
-                                <strong>{t("Description:")}</strong> {project.description} {/* Usar traducción */}
+                                <strong>{t("Description:")}</strong> {project.description}
                             </p>
                             <p className="due-date">
-                                <strong>{t("Due Date:")}</strong> {convertDateTimeToReadableFormat(project.dateFinish)} {/* Usar traducción */}
+                                <strong>{t("Due Date:")}</strong> {convertDateTimeToReadableFormat(project.dateFinish)}
                             </p>
 
                             <List
@@ -162,7 +155,6 @@ const ProjectsComp = ({ createNotification }) => {
                             />
 
                             <div className="project-actions">
-                                {/* Completar proyecto */}
                                 <Button
                                     onClick={() => completeProject(project.id)}
                                     type="primary"
@@ -170,20 +162,18 @@ const ProjectsComp = ({ createNotification }) => {
                                     aria-label={`Mark ${project.name} as completed`}
                                     className="project-action-button"
                                 >
-                                    {t("Complete")} {/* Usar traducción */}
+                                    {t("Complete")}
                                 </Button>
 
-                                {/* Editar proyecto */}
                                 <Button
                                     onClick={() => editProject(project.id)}
                                     icon={<EditOutlined />}
                                     aria-label={`Edit ${project.name}`}
                                     className="project-action-button"
                                 >
-                                    {t("Edit")} {/* Usar traducción */}
+                                    {t("Edit")}
                                 </Button>
 
-                                {/* Eliminar proyecto */}
                                 <Button
                                     onClick={() => deleteProject(project.id)}
                                     icon={<DeleteOutlined />}
@@ -191,7 +181,7 @@ const ProjectsComp = ({ createNotification }) => {
                                     aria-label={`Delete ${project.name}`}
                                     className="project-action-button"
                                 >
-                                    {t("Delete")} {/* Usar traducción */}
+                                    {t("Delete")}
                                 </Button>
                             </div>
                         </Card>

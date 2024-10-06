@@ -4,6 +4,7 @@
 .edit-project-container {
     background-color: #FAF3E0;
     padding: 10px; /* Espaciado interno */
+    min-height: 70vh; /* Altura mínima para el contenedor */
 }
 
 /* Estilo para el título del formulario */
@@ -18,14 +19,10 @@
     margin-bottom: 10px; /* Espaciado inferior */
 }
 
-/* Estilo para el contenedor del formulario */
-.project-form {
-    margin-top: 20px; /* Espaciado superior */
-}
-
 /* Estilo para los campos de entrada */
 .input-field {
     margin-top: 10px; /* Espaciado superior */
+    width: 100%; /* Asegura que el campo ocupe todo el ancho disponible */
 }
 
 /* Estilo para los mensajes de error */
@@ -42,5 +39,21 @@
 
 /* Estilo para el botón de editar el proyecto */
 .edit-project-button {
-    margin-top: 10px; /* Espaciado superior */
+    margin-top: 20px; /* Espaciado superior */
+    width: 100%; /* Asegura que el botón ocupe todo el ancho disponible */
+}
+
+/* Media queries para mejorar la responsividad */
+@media (max-width: 768px) {
+    .edit-project-title {
+        font-size: 20px; /* Reduce el tamaño de fuente en pantallas más pequeñas */
+    }
+
+    .input-field {
+        font-size: 16px; /* Ajusta el tamaño de fuente de los campos */
+    }
+
+    .error-text {
+        font-size: 14px; /* Ajusta el tamaño de fuente de los mensajes de error */
+    }
 }

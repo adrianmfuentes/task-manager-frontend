@@ -1,5 +1,3 @@
-/* src/Css/ViewTasks.css */
-
 /* Estilo general para el contenedor principal del componente */
 .tasks-container {
     padding: 10px; /* Espaciado interno del contenedor */
@@ -17,6 +15,7 @@
 /* Estilo para los mensajes de error */
 .error-message {
     color: red; /* Color del mensaje de error */
+    text-align: center; /* Centrar el mensaje de error */
 }
 
 /* Estilo para la lista de tareas */
@@ -29,11 +28,11 @@
     display: flex; /* Flexbox para disposición */
     flex-direction: column; /* Disposición vertical */
     justify-content: space-between; /* Espaciado entre elementos */
-    min-height: 260px; /* Altura mínima */
     padding: 16px; /* Espaciado interno */
     background-color: #FAF3E0;
     border-radius: 8px; /* Bordes redondeados */
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra para profundidad */
+    min-height: 240px;
 }
 
 /* Estilo para el texto de descripción de la tarea */
@@ -64,4 +63,39 @@
 /* Eliminar el margen derecho del último botón */
 .task-action-button:last-child {
     margin-right: 0; /* Sin margen derecho */
+}
+
+/* Media queries para pantallas más pequeñas */
+@media (max-width: 768px) {
+    .task-card {
+        padding: 12px;
+    }
+
+    .task-actions {
+        flex-direction: column; /* Alinear los botones en columna */
+    }
+
+    .task-action-button {
+        margin-bottom: 10px;
+    }
+
+    .task-action-button:last-child {
+        margin-bottom: 0;
+    }
+}
+
+/* Estilo para pantallas muy pequeñas */
+@media (max-width: 480px) {
+    .task-card {
+        padding: 10px;
+    }
+
+    .task-actions {
+        flex-direction: column;
+    }
+
+    .task-action-button {
+        font-size: 14px; /* Reducir tamaño de texto */
+        padding: 8px; /* Reducir el padding */
+    }
 }
